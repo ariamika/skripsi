@@ -28,4 +28,6 @@ if ($err) {
     $cost = json_decode($response, true);
 }
 
-echo json_encode($cost["rajaongkir"]["results"]);
+// var_dump($cost);
+
+echo json_encode(isset($cost) ? $cost["rajaongkir"]["results"] : []);

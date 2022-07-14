@@ -164,7 +164,6 @@ include 'dbconnect.php';
 			<li>
 				<img src="images/slide2.jpg" alt="" />
 			</li>
-			
 			<li>
 				<img src="images/slide3.jpg" alt="" />
 			</li>

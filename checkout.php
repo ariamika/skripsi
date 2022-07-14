@@ -258,10 +258,10 @@ if (isset($_POST['checkout'])) {
                                     </div>
                                 </div>
                             </td>
-                            <td class="invert">Rp. <?php echo number_format($b['hargabefore']); ?></td>
+                            <td class="invert">Rp. <?php echo number_format($b['hargaafter']); ?></td>
                             <td class="invert">Rp.
                                 <?php
-                                $total_harga_per_unit = $b['hargabefore'] * $b['qty'];
+                                $total_harga_per_unit = $b['hargaafter'] * $b['qty'];
                                 $subtotal_harga = $subtotal_harga + $total_harga_per_unit;
                                 echo number_format($total_harga_per_unit);
                                 ?></td>
@@ -522,8 +522,8 @@ if (isset($_POST['checkout'])) {
     <link href="css/skdslider.css" rel="stylesheet">
     <script type="text/javascript">
         function getDetailExpedition() {
-            const province_id = <?php echo $province_id; ?>;
-            const city_id = <?php echo $city_id; ?>;
+            const province_id = <?php echo $province_id ? $province_id : 0 ; ?>;
+            const city_id = <?php echo $city_id ? $city_id : 0; ?>;
             const total_weight = <?php echo $total_berat * 1000; ?>;
             const expedition = $("#ekspedisi").val();
 
