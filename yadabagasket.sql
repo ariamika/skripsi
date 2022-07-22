@@ -1,200 +1,773 @@
-  /*
-  SQLyog Ultimate v12.4.1 (64 bit)
-  MySQL - 10.4.11-MariaDB : Database - yadabagasket
-  *********************************************************************
-  */
+/*
+SQLyog Ultimate v12.4.1 (64 bit)
+MySQL - 10.4.24-MariaDB : Database - yadabagasket
+*********************************************************************
+*/
 
-  /*!40101 SET NAMES utf8 */;
+/*!40101 SET NAMES utf8 */;
 
-  /*!40101 SET SQL_MODE=''*/;
+/*!40101 SET SQL_MODE=''*/;
 
-  /*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
-  /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
-  /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
-  /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
-  CREATE DATABASE /*!32312 IF NOT EXISTS*/`yadabagasket` /*!40100 DEFAULT CHARACTER SET utf8mb4 */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+CREATE DATABASE /*!32312 IF NOT EXISTS*/`yadabagasket` /*!40100 DEFAULT CHARACTER SET utf8mb4 */;
 
-  USE `yadabagasket`;
+USE `yadabagasket`;
 
-  /*Table structure for table `cart` */
+/*Table structure for table `cart` */
 
-  DROP TABLE IF EXISTS `cart`;
+DROP TABLE IF EXISTS `cart`;
 
-  CREATE TABLE `cart` (
-    `idcart` int(11) NOT NULL AUTO_INCREMENT,
-    `orderid` varchar(100) NOT NULL,
-    `userid` int(11) NOT NULL,
-    `tglorder` timestamp NOT NULL DEFAULT current_timestamp(),
-    `status` varchar(10) NOT NULL DEFAULT 'Cart',
-    PRIMARY KEY (`idcart`),
-    UNIQUE KEY `orderid` (`orderid`),
-    KEY `orderid_2` (`orderid`)
-  ) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4;
+CREATE TABLE `cart` (
+  `idcart` int(11) NOT NULL AUTO_INCREMENT,
+  `orderid` varchar(100) NOT NULL,
+  `userid` int(11) NOT NULL,
+  `tglorder` timestamp NOT NULL DEFAULT current_timestamp(),
+  `resinumber` varchar(250) DEFAULT NULL,
+  `status` varchar(10) NOT NULL DEFAULT 'Cart',
+  PRIMARY KEY (`idcart`),
+  UNIQUE KEY `orderid` (`orderid`),
+  KEY `orderid_2` (`orderid`)
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4;
 
-  /*Data for the table `cart` */
+/*Data for the table `cart` */
 
-  insert  into `cart`(`idcart`,`orderid`,`userid`,`tglorder`,`status`) values 
-  (10,'15wKVT0nej25Y',2,'2020-03-16 19:10:42','Selesai'),
-  (12,'15PzF03ejd8W2',1,'2020-05-13 09:40:48','Confirmed'),
-  (13,'16bK7earFw94Y',3,'2022-06-28 17:00:18','Cart'),
-  (14,'16CKJkZ2nMNMQ',1,'2022-07-07 20:22:06','Cart'),
-  (15,'16iyTFP6p8qjA',6,'2022-07-10 15:57:05','Cart');
+insert  into `cart`(`idcart`,`orderid`,`userid`,`tglorder`,`resinumber`,`status`) values 
+(10,'15wKVT0nej25Y',2,'2020-03-16 19:10:42',NULL,'Selesai'),
+(12,'15PzF03ejd8W2',1,'2020-05-13 09:40:48',NULL,'Confirmed'),
+(13,'16bK7earFw94Y',3,'2022-06-28 17:00:18',NULL,'Cart'),
+(14,'16CKJkZ2nMNMQ',1,'2022-07-07 20:22:06',NULL,'Cart'),
+(15,'16iyTFP6p8qjA',6,'2022-07-10 15:57:05',NULL,'Cart'),
+(18,'16S9NcPNn7n7E',7,'2022-07-23 00:08:35','RESI-JOY-001','Selesai');
 
-  /*Table structure for table `detailorder` */
+/*Table structure for table `detailorder` */
 
-  DROP TABLE IF EXISTS `detailorder`;
+DROP TABLE IF EXISTS `detailorder`;
 
-  CREATE TABLE `detailorder` (
-    `detailid` int(11) NOT NULL AUTO_INCREMENT,
-    `orderid` varchar(100) NOT NULL,
-    `idproduk` int(11) NOT NULL,
-    `qty` int(11) NOT NULL,
-    PRIMARY KEY (`detailid`),
-    KEY `orderid` (`orderid`),
-    KEY `idproduk` (`idproduk`),
-    CONSTRAINT `idproduk` FOREIGN KEY (`idproduk`) REFERENCES `produk` (`idproduk`) ON DELETE CASCADE ON UPDATE CASCADE,
-    CONSTRAINT `orderid` FOREIGN KEY (`orderid`) REFERENCES `cart` (`orderid`) ON DELETE CASCADE ON UPDATE CASCADE
-  ) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8mb4;
+CREATE TABLE `detailorder` (
+  `detailid` int(11) NOT NULL AUTO_INCREMENT,
+  `orderid` varchar(100) NOT NULL,
+  `idproduk` int(11) NOT NULL,
+  `qty` int(11) NOT NULL,
+  PRIMARY KEY (`detailid`),
+  KEY `orderid` (`orderid`),
+  KEY `idproduk` (`idproduk`),
+  CONSTRAINT `idproduk` FOREIGN KEY (`idproduk`) REFERENCES `produk` (`idproduk`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `orderid` FOREIGN KEY (`orderid`) REFERENCES `cart` (`orderid`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=36 DEFAULT CHARSET=utf8mb4;
 
-  /*Data for the table `detailorder` */
+/*Data for the table `detailorder` */
 
-  insert  into `detailorder`(`detailid`,`orderid`,`idproduk`,`qty`) values 
-  (13,'15wKVT0nej25Y',1,100),
-  (14,'15PzF03ejd8W2',2,1),
-  (24,'16iyTFP6p8qjA',1,2),
-  (25,'16CKJkZ2nMNMQ',3,1),
-  (26,'16bK7earFw94Y',2,2);
+insert  into `detailorder`(`detailid`,`orderid`,`idproduk`,`qty`) values 
+(13,'15wKVT0nej25Y',1,100),
+(14,'15PzF03ejd8W2',2,1),
+(24,'16iyTFP6p8qjA',1,2),
+(25,'16CKJkZ2nMNMQ',3,1),
+(26,'16bK7earFw94Y',2,2),
+(34,'16S9NcPNn7n7E',1,2),
+(35,'16S9NcPNn7n7E',3,2);
 
-  /*Table structure for table `kategori` */
+/*Table structure for table `kategori` */
 
-  DROP TABLE IF EXISTS `kategori`;
+DROP TABLE IF EXISTS `kategori`;
 
-  CREATE TABLE `kategori` (
-    `idkategori` int(11) NOT NULL AUTO_INCREMENT,
-    `namakategori` varchar(20) NOT NULL,
-    `tgldibuat` timestamp NOT NULL DEFAULT current_timestamp(),
-    PRIMARY KEY (`idkategori`)
-  ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4;
+CREATE TABLE `kategori` (
+  `idkategori` int(11) NOT NULL AUTO_INCREMENT,
+  `namakategori` varchar(20) NOT NULL,
+  `tgldibuat` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`idkategori`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4;
 
-  /*Data for the table `kategori` */
+/*Data for the table `kategori` */
 
-  insert  into `kategori`(`idkategori`,`namakategori`,`tgldibuat`) values 
-  (1,'Bunga Tangkai','2019-12-20 14:28:34'),
-  (2,'Bunga Papan','2019-12-20 14:34:17'),
-  (3,'Bunga Hidup','2020-03-16 19:15:40');
+insert  into `kategori`(`idkategori`,`namakategori`,`tgldibuat`) values 
+(1,'Bunga Tangkai','2019-12-20 14:28:34'),
+(2,'Bunga Papan','2019-12-20 14:34:17'),
+(3,'Bunga Hidup','2020-03-16 19:15:40');
 
-  /*Table structure for table `konfirmasi` */
+/*Table structure for table `konfirmasi` */
 
-  DROP TABLE IF EXISTS `konfirmasi`;
+DROP TABLE IF EXISTS `konfirmasi`;
 
-  CREATE TABLE `konfirmasi` (
-    `idkonfirmasi` int(11) NOT NULL AUTO_INCREMENT,
-    `orderid` varchar(100) NOT NULL,
-    `userid` int(11) NOT NULL,
-    `payment` varchar(10) NOT NULL,
-    `namarekening` varchar(25) NOT NULL,
-    `tglbayar` date NOT NULL,
-    `tglsubmit` timestamp NOT NULL DEFAULT current_timestamp(),
-    PRIMARY KEY (`idkonfirmasi`),
-    KEY `userid` (`userid`),
-    CONSTRAINT `userid` FOREIGN KEY (`userid`) REFERENCES `login` (`userid`) ON DELETE CASCADE ON UPDATE CASCADE
-  ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
+CREATE TABLE `konfirmasi` (
+  `idkonfirmasi` int(11) NOT NULL AUTO_INCREMENT,
+  `orderid` varchar(100) NOT NULL,
+  `userid` int(11) NOT NULL,
+  `payment` varchar(10) NOT NULL,
+  `namarekening` varchar(25) NOT NULL,
+  `tglbayar` date NOT NULL,
+  `tglsubmit` timestamp NOT NULL DEFAULT current_timestamp(),
+  `bukti_pembayaran` varchar(250) NOT NULL,
+  PRIMARY KEY (`idkonfirmasi`),
+  KEY `userid` (`userid`),
+  CONSTRAINT `userid` FOREIGN KEY (`userid`) REFERENCES `login` (`userid`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
 
-  /*Data for the table `konfirmasi` */
+/*Data for the table `konfirmasi` */
 
-  /*Table structure for table `login` */
+/*Table structure for table `login` */
 
-  DROP TABLE IF EXISTS `login`;
+DROP TABLE IF EXISTS `login`;
 
-  CREATE TABLE `login` (
-    `userid` int(11) NOT NULL AUTO_INCREMENT,
-    `namalengkap` varchar(50) NOT NULL,
-    `email` varchar(50) NOT NULL,
-    `password` varchar(150) NOT NULL,
-    `notelp` varchar(15) NOT NULL,
-    `provinsi` int(11) NOT NULL,
-    `kota` int(11) DEFAULT NULL,
-    `alamat` varchar(100) NOT NULL,
-    `tgljoin` timestamp NOT NULL DEFAULT current_timestamp(),
-    `role` varchar(7) NOT NULL DEFAULT 'Member',
-    `lastlogin` timestamp NULL DEFAULT NULL,
-    PRIMARY KEY (`userid`)
-  ) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4;
+CREATE TABLE `login` (
+  `userid` int(11) NOT NULL AUTO_INCREMENT,
+  `namalengkap` varchar(50) NOT NULL,
+  `email` varchar(50) NOT NULL,
+  `password` varchar(150) NOT NULL,
+  `notelp` varchar(15) NOT NULL,
+  `provinsi` int(11) NOT NULL,
+  `kota` int(11) DEFAULT NULL,
+  `alamat` varchar(100) NOT NULL,
+  `tgljoin` timestamp NOT NULL DEFAULT current_timestamp(),
+  `role` varchar(7) NOT NULL DEFAULT 'Member',
+  `lastlogin` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`userid`)
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4;
 
-  /*Data for the table `login` */
+/*Data for the table `login` */
 
-  insert  into `login`(`userid`,`namalengkap`,`email`,`password`,`notelp`,`provinsi`,`kota`,`alamat`,`tgljoin`,`role`,`lastlogin`) values 
-  (1,'raffi ahmad','raffiahmad@ymail.com','$2y$10$XKPTsTYuwyJhPOLzVFN5Gu1e5Rm3RIOsP9bAnWt9ldqVwhKh7r9JK','085567532147',2,NULL,'Indonesia','2022-06-27 18:42:45','Admin',NULL),
-  (2,'nagita','nagita@ymail.com','$2y$10$Kq1LJrvxnSSlbqmzS4fxDeTnvjFHRE2hIz9xNgYKbUl7k0mckVH32','0812777888',1,NULL,'Indonesia','2022-06-28 17:10:16','Member',NULL),
-  (6,'arya','aryabagas0404@gmail.com','$2y$10$38t9TuaCxcYSMMHwMuio6.LQKnoRKfTU7BCYB3GR5Z6lHVg08B.4K','085695248705',1,NULL,'Pondok Aren Arinda 2','2022-07-10 15:55:48','Member',NULL),
-  (7,'CJ','joy@mail.com','$2y$10$eRLzh2j67xg15g5fE4RabuFOgitdyBz/t2IcmikIBEuBLXkXVDBSu','123124421',1,128,'Bali Kuta Slatan 231','2022-07-12 13:26:07','Member',NULL);
+insert  into `login`(`userid`,`namalengkap`,`email`,`password`,`notelp`,`provinsi`,`kota`,`alamat`,`tgljoin`,`role`,`lastlogin`) values 
+(1,'raffi ahmad','raffiahmad@ymail.com','$2y$10$XKPTsTYuwyJhPOLzVFN5Gu1e5Rm3RIOsP9bAnWt9ldqVwhKh7r9JK','085567532147',21,3,'Indonesia','2022-06-27 18:42:45','Admin',NULL),
+(2,'nagita','nagita@ymail.com','$2y$10$Kq1LJrvxnSSlbqmzS4fxDeTnvjFHRE2hIz9xNgYKbUl7k0mckVH32','0812777888',11,31,'Indonesia','2022-06-28 17:10:16','Member',NULL),
+(6,'arya','aryabagas0404@gmail.com','$2y$10$38t9TuaCxcYSMMHwMuio6.LQKnoRKfTU7BCYB3GR5Z6lHVg08B.4K','085695248705',9,34,'Pondok Aren Arinda 2','2022-07-10 15:55:48','Member',NULL),
+(7,'CJ','joy@mail.com','$2y$10$eRLzh2j67xg15g5fE4RabuFOgitdyBz/t2IcmikIBEuBLXkXVDBSu','123124421',1,128,'Bali Kuta Slatan 231','2022-07-12 13:26:07','Member',NULL),
+(8,'Admin','admin','$2y$10$eRLzh2j67xg15g5fE4RabuFOgitdyBz/t2IcmikIBEuBLXkXVDBSu','123124421',1,128,'Bali Kuta Slatan 231','2022-07-12 13:26:07','Admin',NULL);
 
-  /*Table structure for table `ongkir_jne` */
+/*Table structure for table `master_kota` */
 
-  DROP TABLE IF EXISTS `ongkir_jne`;
+DROP TABLE IF EXISTS `master_kota`;
 
-  CREATE TABLE `ongkir_jne` (
-    `berat` int(11) NOT NULL,
-    `harga` int(11) NOT NULL
-  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE `master_kota` (
+  `city_id` int(11) NOT NULL,
+  `province_id` int(11) NOT NULL,
+  `province` varchar(30) NOT NULL,
+  `type` varchar(9) NOT NULL,
+  `city_name` varchar(41) NOT NULL,
+  `postal_code` int(11) NOT NULL,
+  PRIMARY KEY (`city_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-  /*Data for the table `ongkir_jne` */
+/*Data for the table `master_kota` */
 
-  insert  into `ongkir_jne`(`berat`,`harga`) values 
-  (1,10000),
-  (2,20000),
-  (3,30000),
-  (4,40000),
-  (5,50000);
+insert  into `master_kota`(`city_id`,`province_id`,`province`,`type`,`city_name`,`postal_code`) values 
+(1,21,'Nanggroe Aceh Darussalam (NAD)','Kabupaten','Aceh Barat',23681),
+(2,21,'Nanggroe Aceh Darussalam (NAD)','Kabupaten','Aceh Barat Daya',23764),
+(3,21,'Nanggroe Aceh Darussalam (NAD)','Kabupaten','Aceh Besar',23951),
+(4,21,'Nanggroe Aceh Darussalam (NAD)','Kabupaten','Aceh Jaya',23654),
+(5,21,'Nanggroe Aceh Darussalam (NAD)','Kabupaten','Aceh Selatan',23719),
+(6,21,'Nanggroe Aceh Darussalam (NAD)','Kabupaten','Aceh Singkil',24785),
+(7,21,'Nanggroe Aceh Darussalam (NAD)','Kabupaten','Aceh Tamiang',24476),
+(8,21,'Nanggroe Aceh Darussalam (NAD)','Kabupaten','Aceh Tengah',24511),
+(9,21,'Nanggroe Aceh Darussalam (NAD)','Kabupaten','Aceh Tenggara',24611),
+(10,21,'Nanggroe Aceh Darussalam (NAD)','Kabupaten','Aceh Timur',24454),
+(11,21,'Nanggroe Aceh Darussalam (NAD)','Kabupaten','Aceh Utara',24382),
+(12,32,'Sumatera Barat','Kabupaten','Agam',26411),
+(13,23,'Nusa Tenggara Timur (NTT)','Kabupaten','Alor',85811),
+(14,19,'Maluku','Kota','Ambon',97222),
+(15,34,'Sumatera Utara','Kabupaten','Asahan',21214),
+(16,24,'Papua','Kabupaten','Asmat',99777),
+(17,1,'Bali','Kabupaten','Badung',80351),
+(18,13,'Kalimantan Selatan','Kabupaten','Balangan',71611),
+(19,15,'Kalimantan Timur','Kota','Balikpapan',76111),
+(20,21,'Nanggroe Aceh Darussalam (NAD)','Kota','Banda Aceh',23238),
+(21,18,'Lampung','Kota','Bandar Lampung',35139),
+(22,9,'Jawa Barat','Kabupaten','Bandung',40311),
+(23,9,'Jawa Barat','Kota','Bandung',40111),
+(24,9,'Jawa Barat','Kabupaten','Bandung Barat',40721),
+(25,29,'Sulawesi Tengah','Kabupaten','Banggai',94711),
+(26,29,'Sulawesi Tengah','Kabupaten','Banggai Kepulauan',94881),
+(27,2,'Bangka Belitung','Kabupaten','Bangka',33212),
+(28,2,'Bangka Belitung','Kabupaten','Bangka Barat',33315),
+(29,2,'Bangka Belitung','Kabupaten','Bangka Selatan',33719),
+(30,2,'Bangka Belitung','Kabupaten','Bangka Tengah',33613),
+(31,11,'Jawa Timur','Kabupaten','Bangkalan',69118),
+(32,1,'Bali','Kabupaten','Bangli',80619),
+(33,13,'Kalimantan Selatan','Kabupaten','Banjar',70619),
+(34,9,'Jawa Barat','Kota','Banjar',46311),
+(35,13,'Kalimantan Selatan','Kota','Banjarbaru',70712),
+(36,13,'Kalimantan Selatan','Kota','Banjarmasin',70117),
+(37,10,'Jawa Tengah','Kabupaten','Banjarnegara',53419),
+(38,28,'Sulawesi Selatan','Kabupaten','Bantaeng',92411),
+(39,5,'DI Yogyakarta','Kabupaten','Bantul',55715),
+(40,33,'Sumatera Selatan','Kabupaten','Banyuasin',30911),
+(41,10,'Jawa Tengah','Kabupaten','Banyumas',53114),
+(42,11,'Jawa Timur','Kabupaten','Banyuwangi',68416),
+(43,13,'Kalimantan Selatan','Kabupaten','Barito Kuala',70511),
+(44,14,'Kalimantan Tengah','Kabupaten','Barito Selatan',73711),
+(45,14,'Kalimantan Tengah','Kabupaten','Barito Timur',73671),
+(46,14,'Kalimantan Tengah','Kabupaten','Barito Utara',73881),
+(47,28,'Sulawesi Selatan','Kabupaten','Barru',90719),
+(48,17,'Kepulauan Riau','Kota','Batam',29413),
+(49,10,'Jawa Tengah','Kabupaten','Batang',51211),
+(50,8,'Jambi','Kabupaten','Batang Hari',36613),
+(51,11,'Jawa Timur','Kota','Batu',65311),
+(52,34,'Sumatera Utara','Kabupaten','Batu Bara',21655),
+(53,30,'Sulawesi Tenggara','Kota','Bau-Bau',93719),
+(54,9,'Jawa Barat','Kabupaten','Bekasi',17837),
+(55,9,'Jawa Barat','Kota','Bekasi',17121),
+(56,2,'Bangka Belitung','Kabupaten','Belitung',33419),
+(57,2,'Bangka Belitung','Kabupaten','Belitung Timur',33519),
+(58,23,'Nusa Tenggara Timur (NTT)','Kabupaten','Belu',85711),
+(59,21,'Nanggroe Aceh Darussalam (NAD)','Kabupaten','Bener Meriah',24581),
+(60,26,'Riau','Kabupaten','Bengkalis',28719),
+(61,12,'Kalimantan Barat','Kabupaten','Bengkayang',79213),
+(62,4,'Bengkulu','Kota','Bengkulu',38229),
+(63,4,'Bengkulu','Kabupaten','Bengkulu Selatan',38519),
+(64,4,'Bengkulu','Kabupaten','Bengkulu Tengah',38319),
+(65,4,'Bengkulu','Kabupaten','Bengkulu Utara',38619),
+(66,15,'Kalimantan Timur','Kabupaten','Berau',77311),
+(67,24,'Papua','Kabupaten','Biak Numfor',98119),
+(68,22,'Nusa Tenggara Barat (NTB)','Kabupaten','Bima',84171),
+(69,22,'Nusa Tenggara Barat (NTB)','Kota','Bima',84139),
+(70,34,'Sumatera Utara','Kota','Binjai',20712),
+(71,17,'Kepulauan Riau','Kabupaten','Bintan',29135),
+(72,21,'Nanggroe Aceh Darussalam (NAD)','Kabupaten','Bireuen',24219),
+(73,31,'Sulawesi Utara','Kota','Bitung',95512),
+(74,11,'Jawa Timur','Kabupaten','Blitar',66171),
+(75,11,'Jawa Timur','Kota','Blitar',66124),
+(76,10,'Jawa Tengah','Kabupaten','Blora',58219),
+(77,7,'Gorontalo','Kabupaten','Boalemo',96319),
+(78,9,'Jawa Barat','Kabupaten','Bogor',16911),
+(79,9,'Jawa Barat','Kota','Bogor',16119),
+(80,11,'Jawa Timur','Kabupaten','Bojonegoro',62119),
+(81,31,'Sulawesi Utara','Kabupaten','Bolaang Mongondow (Bolmong)',95755),
+(82,31,'Sulawesi Utara','Kabupaten','Bolaang Mongondow Selatan',95774),
+(83,31,'Sulawesi Utara','Kabupaten','Bolaang Mongondow Timur',95783),
+(84,31,'Sulawesi Utara','Kabupaten','Bolaang Mongondow Utara',95765),
+(85,30,'Sulawesi Tenggara','Kabupaten','Bombana',93771),
+(86,11,'Jawa Timur','Kabupaten','Bondowoso',68219),
+(87,28,'Sulawesi Selatan','Kabupaten','Bone',92713),
+(88,7,'Gorontalo','Kabupaten','Bone Bolango',96511),
+(89,15,'Kalimantan Timur','Kota','Bontang',75313),
+(90,24,'Papua','Kabupaten','Boven Digoel',99662),
+(91,10,'Jawa Tengah','Kabupaten','Boyolali',57312),
+(92,10,'Jawa Tengah','Kabupaten','Brebes',52212),
+(93,32,'Sumatera Barat','Kota','Bukittinggi',26115),
+(94,1,'Bali','Kabupaten','Buleleng',81111),
+(95,28,'Sulawesi Selatan','Kabupaten','Bulukumba',92511),
+(96,16,'Kalimantan Utara','Kabupaten','Bulungan (Bulongan)',77211),
+(97,8,'Jambi','Kabupaten','Bungo',37216),
+(98,29,'Sulawesi Tengah','Kabupaten','Buol',94564),
+(99,19,'Maluku','Kabupaten','Buru',97371),
+(100,19,'Maluku','Kabupaten','Buru Selatan',97351),
+(101,30,'Sulawesi Tenggara','Kabupaten','Buton',93754),
+(102,30,'Sulawesi Tenggara','Kabupaten','Buton Utara',93745),
+(103,9,'Jawa Barat','Kabupaten','Ciamis',46211),
+(104,9,'Jawa Barat','Kabupaten','Cianjur',43217),
+(105,10,'Jawa Tengah','Kabupaten','Cilacap',53211),
+(106,3,'Banten','Kota','Cilegon',42417),
+(107,9,'Jawa Barat','Kota','Cimahi',40512),
+(108,9,'Jawa Barat','Kabupaten','Cirebon',45611),
+(109,9,'Jawa Barat','Kota','Cirebon',45116),
+(110,34,'Sumatera Utara','Kabupaten','Dairi',22211),
+(111,24,'Papua','Kabupaten','Deiyai (Deliyai)',98784),
+(112,34,'Sumatera Utara','Kabupaten','Deli Serdang',20511),
+(113,10,'Jawa Tengah','Kabupaten','Demak',59519),
+(114,1,'Bali','Kota','Denpasar',80227),
+(115,9,'Jawa Barat','Kota','Depok',16416),
+(116,32,'Sumatera Barat','Kabupaten','Dharmasraya',27612),
+(117,24,'Papua','Kabupaten','Dogiyai',98866),
+(118,22,'Nusa Tenggara Barat (NTB)','Kabupaten','Dompu',84217),
+(119,29,'Sulawesi Tengah','Kabupaten','Donggala',94341),
+(120,26,'Riau','Kota','Dumai',28811),
+(121,33,'Sumatera Selatan','Kabupaten','Empat Lawang',31811),
+(122,23,'Nusa Tenggara Timur (NTT)','Kabupaten','Ende',86351),
+(123,28,'Sulawesi Selatan','Kabupaten','Enrekang',91719),
+(124,25,'Papua Barat','Kabupaten','Fakfak',98651),
+(125,23,'Nusa Tenggara Timur (NTT)','Kabupaten','Flores Timur',86213),
+(126,9,'Jawa Barat','Kabupaten','Garut',44126),
+(127,21,'Nanggroe Aceh Darussalam (NAD)','Kabupaten','Gayo Lues',24653),
+(128,1,'Bali','Kabupaten','Gianyar',80519),
+(129,7,'Gorontalo','Kabupaten','Gorontalo',96218),
+(130,7,'Gorontalo','Kota','Gorontalo',96115),
+(131,7,'Gorontalo','Kabupaten','Gorontalo Utara',96611),
+(132,28,'Sulawesi Selatan','Kabupaten','Gowa',92111),
+(133,11,'Jawa Timur','Kabupaten','Gresik',61115),
+(134,10,'Jawa Tengah','Kabupaten','Grobogan',58111),
+(135,5,'DI Yogyakarta','Kabupaten','Gunung Kidul',55812),
+(136,14,'Kalimantan Tengah','Kabupaten','Gunung Mas',74511),
+(137,34,'Sumatera Utara','Kota','Gunungsitoli',22813),
+(138,20,'Maluku Utara','Kabupaten','Halmahera Barat',97757),
+(139,20,'Maluku Utara','Kabupaten','Halmahera Selatan',97911),
+(140,20,'Maluku Utara','Kabupaten','Halmahera Tengah',97853),
+(141,20,'Maluku Utara','Kabupaten','Halmahera Timur',97862),
+(142,20,'Maluku Utara','Kabupaten','Halmahera Utara',97762),
+(143,13,'Kalimantan Selatan','Kabupaten','Hulu Sungai Selatan',71212),
+(144,13,'Kalimantan Selatan','Kabupaten','Hulu Sungai Tengah',71313),
+(145,13,'Kalimantan Selatan','Kabupaten','Hulu Sungai Utara',71419),
+(146,34,'Sumatera Utara','Kabupaten','Humbang Hasundutan',22457),
+(147,26,'Riau','Kabupaten','Indragiri Hilir',29212),
+(148,26,'Riau','Kabupaten','Indragiri Hulu',29319),
+(149,9,'Jawa Barat','Kabupaten','Indramayu',45214),
+(150,24,'Papua','Kabupaten','Intan Jaya',98771),
+(151,6,'DKI Jakarta','Kota','Jakarta Barat',11220),
+(152,6,'DKI Jakarta','Kota','Jakarta Pusat',10540),
+(153,6,'DKI Jakarta','Kota','Jakarta Selatan',12230),
+(154,6,'DKI Jakarta','Kota','Jakarta Timur',13330),
+(155,6,'DKI Jakarta','Kota','Jakarta Utara',14140),
+(156,8,'Jambi','Kota','Jambi',36111),
+(157,24,'Papua','Kabupaten','Jayapura',99352),
+(158,24,'Papua','Kota','Jayapura',99114),
+(159,24,'Papua','Kabupaten','Jayawijaya',99511),
+(160,11,'Jawa Timur','Kabupaten','Jember',68113),
+(161,1,'Bali','Kabupaten','Jembrana',82251),
+(162,28,'Sulawesi Selatan','Kabupaten','Jeneponto',92319),
+(163,10,'Jawa Tengah','Kabupaten','Jepara',59419),
+(164,11,'Jawa Timur','Kabupaten','Jombang',61415),
+(165,25,'Papua Barat','Kabupaten','Kaimana',98671),
+(166,26,'Riau','Kabupaten','Kampar',28411),
+(167,14,'Kalimantan Tengah','Kabupaten','Kapuas',73583),
+(168,12,'Kalimantan Barat','Kabupaten','Kapuas Hulu',78719),
+(169,10,'Jawa Tengah','Kabupaten','Karanganyar',57718),
+(170,1,'Bali','Kabupaten','Karangasem',80819),
+(171,9,'Jawa Barat','Kabupaten','Karawang',41311),
+(172,17,'Kepulauan Riau','Kabupaten','Karimun',29611),
+(173,34,'Sumatera Utara','Kabupaten','Karo',22119),
+(174,14,'Kalimantan Tengah','Kabupaten','Katingan',74411),
+(175,4,'Bengkulu','Kabupaten','Kaur',38911),
+(176,12,'Kalimantan Barat','Kabupaten','Kayong Utara',78852),
+(177,10,'Jawa Tengah','Kabupaten','Kebumen',54319),
+(178,11,'Jawa Timur','Kabupaten','Kediri',64184),
+(179,11,'Jawa Timur','Kota','Kediri',64125),
+(180,24,'Papua','Kabupaten','Keerom',99461),
+(181,10,'Jawa Tengah','Kabupaten','Kendal',51314),
+(182,30,'Sulawesi Tenggara','Kota','Kendari',93126),
+(183,4,'Bengkulu','Kabupaten','Kepahiang',39319),
+(184,17,'Kepulauan Riau','Kabupaten','Kepulauan Anambas',29991),
+(185,19,'Maluku','Kabupaten','Kepulauan Aru',97681),
+(186,32,'Sumatera Barat','Kabupaten','Kepulauan Mentawai',25771),
+(187,26,'Riau','Kabupaten','Kepulauan Meranti',28791),
+(188,31,'Sulawesi Utara','Kabupaten','Kepulauan Sangihe',95819),
+(189,6,'DKI Jakarta','Kabupaten','Kepulauan Seribu',14550),
+(190,31,'Sulawesi Utara','Kabupaten','Kepulauan Siau Tagulandang Biaro (Sitaro)',95862),
+(191,20,'Maluku Utara','Kabupaten','Kepulauan Sula',97995),
+(192,31,'Sulawesi Utara','Kabupaten','Kepulauan Talaud',95885),
+(193,24,'Papua','Kabupaten','Kepulauan Yapen (Yapen Waropen)',98211),
+(194,8,'Jambi','Kabupaten','Kerinci',37167),
+(195,12,'Kalimantan Barat','Kabupaten','Ketapang',78874),
+(196,10,'Jawa Tengah','Kabupaten','Klaten',57411),
+(197,1,'Bali','Kabupaten','Klungkung',80719),
+(198,30,'Sulawesi Tenggara','Kabupaten','Kolaka',93511),
+(199,30,'Sulawesi Tenggara','Kabupaten','Kolaka Utara',93911),
+(200,30,'Sulawesi Tenggara','Kabupaten','Konawe',93411),
+(201,30,'Sulawesi Tenggara','Kabupaten','Konawe Selatan',93811),
+(202,30,'Sulawesi Tenggara','Kabupaten','Konawe Utara',93311),
+(203,13,'Kalimantan Selatan','Kabupaten','Kotabaru',72119),
+(204,31,'Sulawesi Utara','Kota','Kotamobagu',95711),
+(205,14,'Kalimantan Tengah','Kabupaten','Kotawaringin Barat',74119),
+(206,14,'Kalimantan Tengah','Kabupaten','Kotawaringin Timur',74364),
+(207,26,'Riau','Kabupaten','Kuantan Singingi',29519),
+(208,12,'Kalimantan Barat','Kabupaten','Kubu Raya',78311),
+(209,10,'Jawa Tengah','Kabupaten','Kudus',59311),
+(210,5,'DI Yogyakarta','Kabupaten','Kulon Progo',55611),
+(211,9,'Jawa Barat','Kabupaten','Kuningan',45511),
+(212,23,'Nusa Tenggara Timur (NTT)','Kabupaten','Kupang',85362),
+(213,23,'Nusa Tenggara Timur (NTT)','Kota','Kupang',85119),
+(214,15,'Kalimantan Timur','Kabupaten','Kutai Barat',75711),
+(215,15,'Kalimantan Timur','Kabupaten','Kutai Kartanegara',75511),
+(216,15,'Kalimantan Timur','Kabupaten','Kutai Timur',75611),
+(217,34,'Sumatera Utara','Kabupaten','Labuhan Batu',21412),
+(218,34,'Sumatera Utara','Kabupaten','Labuhan Batu Selatan',21511),
+(219,34,'Sumatera Utara','Kabupaten','Labuhan Batu Utara',21711),
+(220,33,'Sumatera Selatan','Kabupaten','Lahat',31419),
+(221,14,'Kalimantan Tengah','Kabupaten','Lamandau',74611),
+(222,11,'Jawa Timur','Kabupaten','Lamongan',64125),
+(223,18,'Lampung','Kabupaten','Lampung Barat',34814),
+(224,18,'Lampung','Kabupaten','Lampung Selatan',35511),
+(225,18,'Lampung','Kabupaten','Lampung Tengah',34212),
+(226,18,'Lampung','Kabupaten','Lampung Timur',34319),
+(227,18,'Lampung','Kabupaten','Lampung Utara',34516),
+(228,12,'Kalimantan Barat','Kabupaten','Landak',78319),
+(229,34,'Sumatera Utara','Kabupaten','Langkat',20811),
+(230,21,'Nanggroe Aceh Darussalam (NAD)','Kota','Langsa',24412),
+(231,24,'Papua','Kabupaten','Lanny Jaya',99531),
+(232,3,'Banten','Kabupaten','Lebak',42319),
+(233,4,'Bengkulu','Kabupaten','Lebong',39264),
+(234,23,'Nusa Tenggara Timur (NTT)','Kabupaten','Lembata',86611),
+(235,21,'Nanggroe Aceh Darussalam (NAD)','Kota','Lhokseumawe',24352),
+(236,32,'Sumatera Barat','Kabupaten','Lima Puluh Koto/Kota',26671),
+(237,17,'Kepulauan Riau','Kabupaten','Lingga',29811),
+(238,22,'Nusa Tenggara Barat (NTB)','Kabupaten','Lombok Barat',83311),
+(239,22,'Nusa Tenggara Barat (NTB)','Kabupaten','Lombok Tengah',83511),
+(240,22,'Nusa Tenggara Barat (NTB)','Kabupaten','Lombok Timur',83612),
+(241,22,'Nusa Tenggara Barat (NTB)','Kabupaten','Lombok Utara',83711),
+(242,33,'Sumatera Selatan','Kota','Lubuk Linggau',31614),
+(243,11,'Jawa Timur','Kabupaten','Lumajang',67319),
+(244,28,'Sulawesi Selatan','Kabupaten','Luwu',91994),
+(245,28,'Sulawesi Selatan','Kabupaten','Luwu Timur',92981),
+(246,28,'Sulawesi Selatan','Kabupaten','Luwu Utara',92911),
+(247,11,'Jawa Timur','Kabupaten','Madiun',63153),
+(248,11,'Jawa Timur','Kota','Madiun',63122),
+(249,10,'Jawa Tengah','Kabupaten','Magelang',56519),
+(250,10,'Jawa Tengah','Kota','Magelang',56133),
+(251,11,'Jawa Timur','Kabupaten','Magetan',63314),
+(252,9,'Jawa Barat','Kabupaten','Majalengka',45412),
+(253,27,'Sulawesi Barat','Kabupaten','Majene',91411),
+(254,28,'Sulawesi Selatan','Kota','Makassar',90111),
+(255,11,'Jawa Timur','Kabupaten','Malang',65163),
+(256,11,'Jawa Timur','Kota','Malang',65112),
+(257,16,'Kalimantan Utara','Kabupaten','Malinau',77511),
+(258,19,'Maluku','Kabupaten','Maluku Barat Daya',97451),
+(259,19,'Maluku','Kabupaten','Maluku Tengah',97513),
+(260,19,'Maluku','Kabupaten','Maluku Tenggara',97651),
+(261,19,'Maluku','Kabupaten','Maluku Tenggara Barat',97465),
+(262,27,'Sulawesi Barat','Kabupaten','Mamasa',91362),
+(263,24,'Papua','Kabupaten','Mamberamo Raya',99381),
+(264,24,'Papua','Kabupaten','Mamberamo Tengah',99553),
+(265,27,'Sulawesi Barat','Kabupaten','Mamuju',91519),
+(266,27,'Sulawesi Barat','Kabupaten','Mamuju Utara',91571),
+(267,31,'Sulawesi Utara','Kota','Manado',95247),
+(268,34,'Sumatera Utara','Kabupaten','Mandailing Natal',22916),
+(269,23,'Nusa Tenggara Timur (NTT)','Kabupaten','Manggarai',86551),
+(270,23,'Nusa Tenggara Timur (NTT)','Kabupaten','Manggarai Barat',86711),
+(271,23,'Nusa Tenggara Timur (NTT)','Kabupaten','Manggarai Timur',86811),
+(272,25,'Papua Barat','Kabupaten','Manokwari',98311),
+(273,25,'Papua Barat','Kabupaten','Manokwari Selatan',98355),
+(274,24,'Papua','Kabupaten','Mappi',99853),
+(275,28,'Sulawesi Selatan','Kabupaten','Maros',90511),
+(276,22,'Nusa Tenggara Barat (NTB)','Kota','Mataram',83131),
+(277,25,'Papua Barat','Kabupaten','Maybrat',98051),
+(278,34,'Sumatera Utara','Kota','Medan',20228),
+(279,12,'Kalimantan Barat','Kabupaten','Melawi',78619),
+(280,8,'Jambi','Kabupaten','Merangin',37319),
+(281,24,'Papua','Kabupaten','Merauke',99613),
+(282,18,'Lampung','Kabupaten','Mesuji',34911),
+(283,18,'Lampung','Kota','Metro',34111),
+(284,24,'Papua','Kabupaten','Mimika',99962),
+(285,31,'Sulawesi Utara','Kabupaten','Minahasa',95614),
+(286,31,'Sulawesi Utara','Kabupaten','Minahasa Selatan',95914),
+(287,31,'Sulawesi Utara','Kabupaten','Minahasa Tenggara',95995),
+(288,31,'Sulawesi Utara','Kabupaten','Minahasa Utara',95316),
+(289,11,'Jawa Timur','Kabupaten','Mojokerto',61382),
+(290,11,'Jawa Timur','Kota','Mojokerto',61316),
+(291,29,'Sulawesi Tengah','Kabupaten','Morowali',94911),
+(292,33,'Sumatera Selatan','Kabupaten','Muara Enim',31315),
+(293,8,'Jambi','Kabupaten','Muaro Jambi',36311),
+(294,4,'Bengkulu','Kabupaten','Muko Muko',38715),
+(295,30,'Sulawesi Tenggara','Kabupaten','Muna',93611),
+(296,14,'Kalimantan Tengah','Kabupaten','Murung Raya',73911),
+(297,33,'Sumatera Selatan','Kabupaten','Musi Banyuasin',30719),
+(298,33,'Sumatera Selatan','Kabupaten','Musi Rawas',31661),
+(299,24,'Papua','Kabupaten','Nabire',98816),
+(300,21,'Nanggroe Aceh Darussalam (NAD)','Kabupaten','Nagan Raya',23674),
+(301,23,'Nusa Tenggara Timur (NTT)','Kabupaten','Nagekeo',86911),
+(302,17,'Kepulauan Riau','Kabupaten','Natuna',29711),
+(303,24,'Papua','Kabupaten','Nduga',99541),
+(304,23,'Nusa Tenggara Timur (NTT)','Kabupaten','Ngada',86413),
+(305,11,'Jawa Timur','Kabupaten','Nganjuk',64414),
+(306,11,'Jawa Timur','Kabupaten','Ngawi',63219),
+(307,34,'Sumatera Utara','Kabupaten','Nias',22876),
+(308,34,'Sumatera Utara','Kabupaten','Nias Barat',22895),
+(309,34,'Sumatera Utara','Kabupaten','Nias Selatan',22865),
+(310,34,'Sumatera Utara','Kabupaten','Nias Utara',22856),
+(311,16,'Kalimantan Utara','Kabupaten','Nunukan',77421),
+(312,33,'Sumatera Selatan','Kabupaten','Ogan Ilir',30811),
+(313,33,'Sumatera Selatan','Kabupaten','Ogan Komering Ilir',30618),
+(314,33,'Sumatera Selatan','Kabupaten','Ogan Komering Ulu',32112),
+(315,33,'Sumatera Selatan','Kabupaten','Ogan Komering Ulu Selatan',32211),
+(316,33,'Sumatera Selatan','Kabupaten','Ogan Komering Ulu Timur',32312),
+(317,11,'Jawa Timur','Kabupaten','Pacitan',63512),
+(318,32,'Sumatera Barat','Kota','Padang',25112),
+(319,34,'Sumatera Utara','Kabupaten','Padang Lawas',22763),
+(320,34,'Sumatera Utara','Kabupaten','Padang Lawas Utara',22753),
+(321,32,'Sumatera Barat','Kota','Padang Panjang',27122),
+(322,32,'Sumatera Barat','Kabupaten','Padang Pariaman',25583),
+(323,34,'Sumatera Utara','Kota','Padang Sidempuan',22727),
+(324,33,'Sumatera Selatan','Kota','Pagar Alam',31512),
+(325,34,'Sumatera Utara','Kabupaten','Pakpak Bharat',22272),
+(326,14,'Kalimantan Tengah','Kota','Palangka Raya',73112),
+(327,33,'Sumatera Selatan','Kota','Palembang',30111),
+(328,28,'Sulawesi Selatan','Kota','Palopo',91911),
+(329,29,'Sulawesi Tengah','Kota','Palu',94111),
+(330,11,'Jawa Timur','Kabupaten','Pamekasan',69319),
+(331,3,'Banten','Kabupaten','Pandeglang',42212),
+(332,9,'Jawa Barat','Kabupaten','Pangandaran',46511),
+(333,28,'Sulawesi Selatan','Kabupaten','Pangkajene Kepulauan',90611),
+(334,2,'Bangka Belitung','Kota','Pangkal Pinang',33115),
+(335,24,'Papua','Kabupaten','Paniai',98765),
+(336,28,'Sulawesi Selatan','Kota','Parepare',91123),
+(337,32,'Sumatera Barat','Kota','Pariaman',25511),
+(338,29,'Sulawesi Tengah','Kabupaten','Parigi Moutong',94411),
+(339,32,'Sumatera Barat','Kabupaten','Pasaman',26318),
+(340,32,'Sumatera Barat','Kabupaten','Pasaman Barat',26511),
+(341,15,'Kalimantan Timur','Kabupaten','Paser',76211),
+(342,11,'Jawa Timur','Kabupaten','Pasuruan',67153),
+(343,11,'Jawa Timur','Kota','Pasuruan',67118),
+(344,10,'Jawa Tengah','Kabupaten','Pati',59114),
+(345,32,'Sumatera Barat','Kota','Payakumbuh',26213),
+(346,25,'Papua Barat','Kabupaten','Pegunungan Arfak',98354),
+(347,24,'Papua','Kabupaten','Pegunungan Bintang',99573),
+(348,10,'Jawa Tengah','Kabupaten','Pekalongan',51161),
+(349,10,'Jawa Tengah','Kota','Pekalongan',51122),
+(350,26,'Riau','Kota','Pekanbaru',28112),
+(351,26,'Riau','Kabupaten','Pelalawan',28311),
+(352,10,'Jawa Tengah','Kabupaten','Pemalang',52319),
+(353,34,'Sumatera Utara','Kota','Pematang Siantar',21126),
+(354,15,'Kalimantan Timur','Kabupaten','Penajam Paser Utara',76311),
+(355,18,'Lampung','Kabupaten','Pesawaran',35312),
+(356,18,'Lampung','Kabupaten','Pesisir Barat',35974),
+(357,32,'Sumatera Barat','Kabupaten','Pesisir Selatan',25611),
+(358,21,'Nanggroe Aceh Darussalam (NAD)','Kabupaten','Pidie',24116),
+(359,21,'Nanggroe Aceh Darussalam (NAD)','Kabupaten','Pidie Jaya',24186),
+(360,28,'Sulawesi Selatan','Kabupaten','Pinrang',91251),
+(361,7,'Gorontalo','Kabupaten','Pohuwato',96419),
+(362,27,'Sulawesi Barat','Kabupaten','Polewali Mandar',91311),
+(363,11,'Jawa Timur','Kabupaten','Ponorogo',63411),
+(364,12,'Kalimantan Barat','Kabupaten','Pontianak',78971),
+(365,12,'Kalimantan Barat','Kota','Pontianak',78112),
+(366,29,'Sulawesi Tengah','Kabupaten','Poso',94615),
+(367,33,'Sumatera Selatan','Kota','Prabumulih',31121),
+(368,18,'Lampung','Kabupaten','Pringsewu',35719),
+(369,11,'Jawa Timur','Kabupaten','Probolinggo',67282),
+(370,11,'Jawa Timur','Kota','Probolinggo',67215),
+(371,14,'Kalimantan Tengah','Kabupaten','Pulang Pisau',74811),
+(372,20,'Maluku Utara','Kabupaten','Pulau Morotai',97771),
+(373,24,'Papua','Kabupaten','Puncak',98981),
+(374,24,'Papua','Kabupaten','Puncak Jaya',98979),
+(375,10,'Jawa Tengah','Kabupaten','Purbalingga',53312),
+(376,9,'Jawa Barat','Kabupaten','Purwakarta',41119),
+(377,10,'Jawa Tengah','Kabupaten','Purworejo',54111),
+(378,25,'Papua Barat','Kabupaten','Raja Ampat',98489),
+(379,4,'Bengkulu','Kabupaten','Rejang Lebong',39112),
+(380,10,'Jawa Tengah','Kabupaten','Rembang',59219),
+(381,26,'Riau','Kabupaten','Rokan Hilir',28992),
+(382,26,'Riau','Kabupaten','Rokan Hulu',28511),
+(383,23,'Nusa Tenggara Timur (NTT)','Kabupaten','Rote Ndao',85982),
+(384,21,'Nanggroe Aceh Darussalam (NAD)','Kota','Sabang',23512),
+(385,23,'Nusa Tenggara Timur (NTT)','Kabupaten','Sabu Raijua',85391),
+(386,10,'Jawa Tengah','Kota','Salatiga',50711),
+(387,15,'Kalimantan Timur','Kota','Samarinda',75133),
+(388,12,'Kalimantan Barat','Kabupaten','Sambas',79453),
+(389,34,'Sumatera Utara','Kabupaten','Samosir',22392),
+(390,11,'Jawa Timur','Kabupaten','Sampang',69219),
+(391,12,'Kalimantan Barat','Kabupaten','Sanggau',78557),
+(392,24,'Papua','Kabupaten','Sarmi',99373),
+(393,8,'Jambi','Kabupaten','Sarolangun',37419),
+(394,32,'Sumatera Barat','Kota','Sawah Lunto',27416),
+(395,12,'Kalimantan Barat','Kabupaten','Sekadau',79583),
+(396,28,'Sulawesi Selatan','Kabupaten','Selayar (Kepulauan Selayar)',92812),
+(397,4,'Bengkulu','Kabupaten','Seluma',38811),
+(398,10,'Jawa Tengah','Kabupaten','Semarang',50511),
+(399,10,'Jawa Tengah','Kota','Semarang',50135),
+(400,19,'Maluku','Kabupaten','Seram Bagian Barat',97561),
+(401,19,'Maluku','Kabupaten','Seram Bagian Timur',97581),
+(402,3,'Banten','Kabupaten','Serang',42182),
+(403,3,'Banten','Kota','Serang',42111),
+(404,34,'Sumatera Utara','Kabupaten','Serdang Bedagai',20915),
+(405,14,'Kalimantan Tengah','Kabupaten','Seruyan',74211),
+(406,26,'Riau','Kabupaten','Siak',28623),
+(407,34,'Sumatera Utara','Kota','Sibolga',22522),
+(408,28,'Sulawesi Selatan','Kabupaten','Sidenreng Rappang/Rapang',91613),
+(409,11,'Jawa Timur','Kabupaten','Sidoarjo',61219),
+(410,29,'Sulawesi Tengah','Kabupaten','Sigi',94364),
+(411,32,'Sumatera Barat','Kabupaten','Sijunjung (Sawah Lunto Sijunjung)',27511),
+(412,23,'Nusa Tenggara Timur (NTT)','Kabupaten','Sikka',86121),
+(413,34,'Sumatera Utara','Kabupaten','Simalungun',21162),
+(414,21,'Nanggroe Aceh Darussalam (NAD)','Kabupaten','Simeulue',23891),
+(415,12,'Kalimantan Barat','Kota','Singkawang',79117),
+(416,28,'Sulawesi Selatan','Kabupaten','Sinjai',92615),
+(417,12,'Kalimantan Barat','Kabupaten','Sintang',78619),
+(418,11,'Jawa Timur','Kabupaten','Situbondo',68316),
+(419,5,'DI Yogyakarta','Kabupaten','Sleman',55513),
+(420,32,'Sumatera Barat','Kabupaten','Solok',27365),
+(421,32,'Sumatera Barat','Kota','Solok',27315),
+(422,32,'Sumatera Barat','Kabupaten','Solok Selatan',27779),
+(423,28,'Sulawesi Selatan','Kabupaten','Soppeng',90812),
+(424,25,'Papua Barat','Kabupaten','Sorong',98431),
+(425,25,'Papua Barat','Kota','Sorong',98411),
+(426,25,'Papua Barat','Kabupaten','Sorong Selatan',98454),
+(427,10,'Jawa Tengah','Kabupaten','Sragen',57211),
+(428,9,'Jawa Barat','Kabupaten','Subang',41215),
+(429,21,'Nanggroe Aceh Darussalam (NAD)','Kota','Subulussalam',24882),
+(430,9,'Jawa Barat','Kabupaten','Sukabumi',43311),
+(431,9,'Jawa Barat','Kota','Sukabumi',43114),
+(432,14,'Kalimantan Tengah','Kabupaten','Sukamara',74712),
+(433,10,'Jawa Tengah','Kabupaten','Sukoharjo',57514),
+(434,23,'Nusa Tenggara Timur (NTT)','Kabupaten','Sumba Barat',87219),
+(435,23,'Nusa Tenggara Timur (NTT)','Kabupaten','Sumba Barat Daya',87453),
+(436,23,'Nusa Tenggara Timur (NTT)','Kabupaten','Sumba Tengah',87358),
+(437,23,'Nusa Tenggara Timur (NTT)','Kabupaten','Sumba Timur',87112),
+(438,22,'Nusa Tenggara Barat (NTB)','Kabupaten','Sumbawa',84315),
+(439,22,'Nusa Tenggara Barat (NTB)','Kabupaten','Sumbawa Barat',84419),
+(440,9,'Jawa Barat','Kabupaten','Sumedang',45326),
+(441,11,'Jawa Timur','Kabupaten','Sumenep',69413),
+(442,8,'Jambi','Kota','Sungaipenuh',37113),
+(443,24,'Papua','Kabupaten','Supiori',98164),
+(444,11,'Jawa Timur','Kota','Surabaya',60119),
+(445,10,'Jawa Tengah','Kota','Surakarta (Solo)',57113),
+(446,13,'Kalimantan Selatan','Kabupaten','Tabalong',71513),
+(447,1,'Bali','Kabupaten','Tabanan',82119),
+(448,28,'Sulawesi Selatan','Kabupaten','Takalar',92212),
+(449,25,'Papua Barat','Kabupaten','Tambrauw',98475),
+(450,16,'Kalimantan Utara','Kabupaten','Tana Tidung',77611),
+(451,28,'Sulawesi Selatan','Kabupaten','Tana Toraja',91819),
+(452,13,'Kalimantan Selatan','Kabupaten','Tanah Bumbu',72211),
+(453,32,'Sumatera Barat','Kabupaten','Tanah Datar',27211),
+(454,13,'Kalimantan Selatan','Kabupaten','Tanah Laut',70811),
+(455,3,'Banten','Kabupaten','Tangerang',15914),
+(456,3,'Banten','Kota','Tangerang',15111),
+(457,3,'Banten','Kota','Tangerang Selatan',15435),
+(458,18,'Lampung','Kabupaten','Tanggamus',35619),
+(459,34,'Sumatera Utara','Kota','Tanjung Balai',21321),
+(460,8,'Jambi','Kabupaten','Tanjung Jabung Barat',36513),
+(461,8,'Jambi','Kabupaten','Tanjung Jabung Timur',36719),
+(462,17,'Kepulauan Riau','Kota','Tanjung Pinang',29111),
+(463,34,'Sumatera Utara','Kabupaten','Tapanuli Selatan',22742),
+(464,34,'Sumatera Utara','Kabupaten','Tapanuli Tengah',22611),
+(465,34,'Sumatera Utara','Kabupaten','Tapanuli Utara',22414),
+(466,13,'Kalimantan Selatan','Kabupaten','Tapin',71119),
+(467,16,'Kalimantan Utara','Kota','Tarakan',77114),
+(468,9,'Jawa Barat','Kabupaten','Tasikmalaya',46411),
+(469,9,'Jawa Barat','Kota','Tasikmalaya',46116),
+(470,34,'Sumatera Utara','Kota','Tebing Tinggi',20632),
+(471,8,'Jambi','Kabupaten','Tebo',37519),
+(472,10,'Jawa Tengah','Kabupaten','Tegal',52419),
+(473,10,'Jawa Tengah','Kota','Tegal',52114),
+(474,25,'Papua Barat','Kabupaten','Teluk Bintuni',98551),
+(475,25,'Papua Barat','Kabupaten','Teluk Wondama',98591),
+(476,10,'Jawa Tengah','Kabupaten','Temanggung',56212),
+(477,20,'Maluku Utara','Kota','Ternate',97714),
+(478,20,'Maluku Utara','Kota','Tidore Kepulauan',97815),
+(479,23,'Nusa Tenggara Timur (NTT)','Kabupaten','Timor Tengah Selatan',85562),
+(480,23,'Nusa Tenggara Timur (NTT)','Kabupaten','Timor Tengah Utara',85612),
+(481,34,'Sumatera Utara','Kabupaten','Toba Samosir',22316),
+(482,29,'Sulawesi Tengah','Kabupaten','Tojo Una-Una',94683),
+(483,29,'Sulawesi Tengah','Kabupaten','Toli-Toli',94542),
+(484,24,'Papua','Kabupaten','Tolikara',99411),
+(485,31,'Sulawesi Utara','Kota','Tomohon',95416),
+(486,28,'Sulawesi Selatan','Kabupaten','Toraja Utara',91831),
+(487,11,'Jawa Timur','Kabupaten','Trenggalek',66312),
+(488,19,'Maluku','Kota','Tual',97612),
+(489,11,'Jawa Timur','Kabupaten','Tuban',62319),
+(490,18,'Lampung','Kabupaten','Tulang Bawang',34613),
+(491,18,'Lampung','Kabupaten','Tulang Bawang Barat',34419),
+(492,11,'Jawa Timur','Kabupaten','Tulungagung',66212),
+(493,28,'Sulawesi Selatan','Kabupaten','Wajo',90911),
+(494,30,'Sulawesi Tenggara','Kabupaten','Wakatobi',93791),
+(495,24,'Papua','Kabupaten','Waropen',98269),
+(496,18,'Lampung','Kabupaten','Way Kanan',34711),
+(497,10,'Jawa Tengah','Kabupaten','Wonogiri',57619),
+(498,10,'Jawa Tengah','Kabupaten','Wonosobo',56311),
+(499,24,'Papua','Kabupaten','Yahukimo',99041),
+(500,24,'Papua','Kabupaten','Yalimo',99481),
+(501,5,'DI Yogyakarta','Kota','Yogyakarta',55111);
 
-  /*Table structure for table `pembayaran` */
+/*Table structure for table `master_provinsi` */
 
-  DROP TABLE IF EXISTS `pembayaran`;
+DROP TABLE IF EXISTS `master_provinsi`;
 
-  CREATE TABLE `pembayaran` (
-    `no` int(11) NOT NULL AUTO_INCREMENT,
-    `metode` varchar(25) NOT NULL,
-    `norek` varchar(25) NOT NULL,
-    `logo` text DEFAULT NULL,
-    `an` varchar(20) NOT NULL,
-    PRIMARY KEY (`no`)
-  ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4;
+CREATE TABLE `master_provinsi` (
+  `province_id` int(11) NOT NULL,
+  `province_name` varchar(250) DEFAULT NULL,
+  PRIMARY KEY (`province_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-  /*Data for the table `pembayaran` */
+/*Data for the table `master_provinsi` */
 
-  insert  into `pembayaran`(`no`,`metode`,`norek`,`logo`,`an`) values 
-  (1,'Bank BCA','13131231231','images/bca.jpg','Arya B'),
-  (2,'Bank Mandiri','943248844843','images/mandiri.jpg','Arya B'),
-  (3,'DANA','0882313132123','images/dana.png','Arya B');
+insert  into `master_provinsi`(`province_id`,`province_name`) values 
+(1,'Bali'),
+(2,'Bangka Belitung'),
+(3,'Banten'),
+(4,'Bengkulu'),
+(5,'DI Yogyakarta'),
+(6,'DKI Jakarta'),
+(7,'Gorontalo'),
+(8,'Jambi'),
+(9,'Jawa Barat'),
+(10,'Jawa Tengah'),
+(11,'Jawa Timur'),
+(12,'Kalimantan Barat'),
+(13,'Kalimantan Selatan'),
+(14,'Kalimantan Tengah'),
+(15,'Kalimantan Timur'),
+(16,'Kalimantan Utara'),
+(17,'Kepulauan Riau'),
+(18,'Lampung'),
+(19,'Maluku'),
+(20,'Maluku Utara'),
+(21,'Nanggroe Aceh Darussalam (NAD)'),
+(22,'Nusa Tenggara Barat (NTB)'),
+(23,'Nusa Tenggara Timur (NTT)'),
+(24,'Papua'),
+(25,'Papua Barat'),
+(26,'Riau'),
+(27,'Sulawesi Barat'),
+(28,'Sulawesi Selatan'),
+(29,'Sulawesi Tengah'),
+(30,'Sulawesi Tenggara'),
+(31,'Sulawesi Utara'),
+(32,'Sumatera Barat'),
+(33,'Sumatera Selatan'),
+(34,'Sumatera Utara');
 
-  /*Table structure for table `produk` */
+/*Table structure for table `ongkir_jne` */
 
-  DROP TABLE IF EXISTS `produk`;
+DROP TABLE IF EXISTS `ongkir_jne`;
 
-  CREATE TABLE `produk` (
-    `idproduk` int(11) NOT NULL AUTO_INCREMENT,
-    `idkategori` int(11) NOT NULL,
-    `namaproduk` varchar(30) NOT NULL,
-    `gambar` varchar(100) NOT NULL,
-    `deskripsi` varchar(200) NOT NULL,
-    `rate` int(11) NOT NULL,
-    `hargabefore` int(11) NOT NULL,
-    `hargaafter` int(11) NOT NULL,
-    `berat_produk` int(255) NOT NULL,
-    `tgldibuat` timestamp NOT NULL DEFAULT current_timestamp(),
-    PRIMARY KEY (`idproduk`),
-    KEY `idkategori` (`idkategori`),
-    CONSTRAINT `idkategori` FOREIGN KEY (`idkategori`) REFERENCES `kategori` (`idkategori`) ON DELETE CASCADE ON UPDATE CASCADE
-  ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4;
+CREATE TABLE `ongkir_jne` (
+  `berat` int(11) NOT NULL,
+  `harga` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-  /*Data for the table `produk` */
+/*Data for the table `ongkir_jne` */
 
-  insert  into `produk`(`idproduk`,`idkategori`,`namaproduk`,`gambar`,`deskripsi`,`rate`,`hargabefore`,`hargaafter`,`berat_produk`,`tgldibuat`) values 
-  (1,1,'Mawar Merah','produk/7443a12318c5f4f29059d243fd14f447.png','Setangkai mawar merah',5,23000,19000,2,'2019-12-20 16:10:26'),
-  (2,1,'Mawar Putih','produk/15kwuDMbYtraw.png','Setangkai mawar putih',4,24000,19500,1,'2019-12-20 16:24:13'),
-  (3,3,'Bunga Hidup','produk/15Ak7lFMfvuJc.jpg','Bunga Hidup',5,25000,15000,1,'2020-03-16 19:16:53');
+insert  into `ongkir_jne`(`berat`,`harga`) values 
+(1,10000),
+(2,20000),
+(3,30000),
+(4,40000),
+(5,50000);
 
-  /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
-  /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-  /*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
-  /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+/*Table structure for table `pembayaran` */
+
+DROP TABLE IF EXISTS `pembayaran`;
+
+CREATE TABLE `pembayaran` (
+  `no` int(11) NOT NULL AUTO_INCREMENT,
+  `metode` varchar(25) NOT NULL,
+  `norek` varchar(25) NOT NULL,
+  `logo` text DEFAULT NULL,
+  `an` varchar(20) NOT NULL,
+  PRIMARY KEY (`no`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4;
+
+/*Data for the table `pembayaran` */
+
+insert  into `pembayaran`(`no`,`metode`,`norek`,`logo`,`an`) values 
+(1,'Bank BCA','13131231231','images/bca.jpg','Arya B'),
+(2,'Bank Mandiri','943248844843','images/mandiri.jpg','Arya B'),
+(3,'DANA','0882313132123','images/dana.png','Arya B');
+
+/*Table structure for table `produk` */
+
+DROP TABLE IF EXISTS `produk`;
+
+CREATE TABLE `produk` (
+  `idproduk` int(11) NOT NULL AUTO_INCREMENT,
+  `idkategori` int(11) NOT NULL,
+  `namaproduk` varchar(30) NOT NULL,
+  `gambar` varchar(100) NOT NULL,
+  `deskripsi` varchar(200) NOT NULL,
+  `rate` int(11) NOT NULL,
+  `hargabefore` int(11) NOT NULL,
+  `hargaafter` int(11) NOT NULL,
+  `berat_produk` int(255) NOT NULL,
+  `tgldibuat` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`idproduk`),
+  KEY `idkategori` (`idkategori`),
+  CONSTRAINT `idkategori` FOREIGN KEY (`idkategori`) REFERENCES `kategori` (`idkategori`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4;
+
+/*Data for the table `produk` */
+
+insert  into `produk`(`idproduk`,`idkategori`,`namaproduk`,`gambar`,`deskripsi`,`rate`,`hargabefore`,`hargaafter`,`berat_produk`,`tgldibuat`) values 
+(1,1,'Mawar Merah','produk/7443a12318c5f4f29059d243fd14f447.png','Setangkai mawar merah',5,23000,19000,2,'2019-12-20 16:10:26'),
+(2,1,'Mawar Putih','produk/15kwuDMbYtraw.png','Setangkai mawar putih',4,24000,19500,1,'2019-12-20 16:24:13'),
+(3,3,'Bunga Hidup','produk/15Ak7lFMfvuJc.jpg','Bunga Hidup',5,25000,15000,1,'2020-03-16 19:16:53');
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
