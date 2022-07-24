@@ -8,8 +8,9 @@ date_default_timezone_set("Asia/Bangkok");
 
 if(isset($_POST['kirim']))
 	{
-		$updatestatus = mysqli_query($conn,"update cart set status='Pengiriman' where orderid='$orderids'");
-		$del =  mysqli_query($conn,"delete from konfirmasi where orderid='$orderids'");
+		$resinumber = $_POST['resi_number'];
+		$updatestatus = mysqli_query($conn,"update cart set status='Pengiriman', resinumber='". $resinumber . "' where orderid='$orderids'");
+		$del = mysqli_query($conn,"delete from konfirmasi where orderid='$orderids'");
 		
 		if($updatestatus&&$del){
 			echo " <div class='alert alert-success'>
@@ -107,6 +108,13 @@ if(isset($_POST['selesai']))
 							<li><a href="../"><span>Kembali ke Toko</span></a></li>
 							<li class="active">
                                 <a href="manageorder.php"><i class="ti-dashboard"></i><span>Kelola Pesanan</span></a>
+                            </li>
+							<li>
+                                <a href="javascript:void(0)" aria-expanded="true"><i class="ti-layout"></i><span>Laporan
+                                    </span></a>
+                                <ul class="collapse">
+                                    <li><a href="totalpenjualan.php" class="active">Total Penjualan</a></li>
+                                </ul>
                             </li>
 							<li>
                                 <a href="javascript:void(0)" aria-expanded="true"><i class="ti-layout"></i><span>Kelola Toko
@@ -249,40 +257,49 @@ if(isset($_POST['selesai']))
 									if($checkdb['status']=='Confirmed'){
 										$ambilinfo = mysqli_query($conn,"select * from konfirmasi where orderid='$orderids'");
 										while($tarik=mysqli_fetch_array($ambilinfo)){		
-										$met = $tarik['payment'];
-										$namarek = $tarik['namarekening'];
-										$tglb = $tarik['tglbayar'];
-										echo '
-										Informasi Pembayaran
-									<div class="data-tables datatable-dark">
-									<table id="dataTable2" class="display" style="width:100%"><thead class="thead-dark">
-											<tr>
-												<th>Metode</th>
-												<th>Pemilik Rekening</th>
-												<th>Tanggal Pembayaran</th>
-												
-											</tr></thead><tbody>
-											<tr>
-											<td>'.$met.'</td>
-											<td>'.$namarek.'</td>
-											<td>'.$tglb.'</td>
-											</tr>
-											</tbody>
-										</table>
-									</div>
-									<br><br>
-									<form method="post">
-									<input type="submit" name="kirim" class="form-control btn btn-success" value="Kirim" \>
-									</form>
-									';
-									}
-									;
+											$met = $tarik['payment'];
+											$namarek = $tarik['namarekening'];
+											$tglb = date_format(date_create($tarik['tglbayar']),'d F Y');
+											$bukti_pembayaran = $tarik['bukti_pembayaran'];
+											echo '
+											Informasi Pembayaran
+											<div class="data-tables datatable-dark">
+												<table class="table table-striped" style="width:100%">
+													<thead class="thead-dark">
+														<tr>
+															<th>Metode</th>
+															<th>Pemilik Rekening</th>
+															<th>Tanggal Pembayaran</th>		
+														</tr>
+													</thead>
+													<tbody>
+														<tr>
+															<td>'.$met.'</td>
+															<td>'.$namarek.'</td>
+															<td>'.$tglb.'</td>
+														</tr>
+													</tbody>
+												</table>
+											</div>
+											<br>
+											<center>
+												<a href="../'. $bukti_pembayaran .'" target="_blank" ><img width="200" src="../'. $bukti_pembayaran .'"></a>
+												<br>
+												<b>File Bukti Pembayaran</b>
+											</center>
+											<br>
+											<form method="post">
+												<h6>Resi Number</h6>
+												<input type="text" class="form-control form-control-sm mb-3" name="resi_number" placeholder="Input Resi Number From Expedition">
+												<input type="submit" name="kirim" class="form-control btn btn-success" value="Submit Resi Number" \>
+											</form>';
+										}
 									} else {
 										echo '
-									<form method="post">
-									<input type="submit" name="selesai" class="form-control btn btn-success" value="Selesaikan" \>
-									</form>
-									';
+										<form method="post">
+										<input type="submit" name="selesai" class="form-control btn btn-success" value="Selesaikan" \>
+										</form>
+										';
 									}
 									?>
 									<br>

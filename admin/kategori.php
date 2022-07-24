@@ -78,6 +78,13 @@
 							<li>
                                 <a href="manageorder.php"><i class="ti-dashboard"></i><span>Kelola Pesanan</span></a>
                             </li>
+                            <li>
+                                <a href="javascript:void(0)" aria-expanded="true"><i class="ti-layout"></i><span>Laporan
+                                    </span></a>
+                                <ul class="collapse">
+                                    <li><a href="totalpenjualan.php" class="active">Total Penjualan</a></li>
+                                </ul>
+                            </li>
 							<li class="active">
                                 <a href="javascript:void(0)" aria-expanded="true"><i class="ti-layout"></i><span>Kelola Toko
                                     </span></a>
