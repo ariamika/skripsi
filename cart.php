@@ -8,6 +8,7 @@ if (!isset($_SESSION['log'])) {
 }
 
 $uid = $_SESSION['id'];
+$role = $_SESSION['role'];
 $caricart = mysqli_query($conn, "select * from cart where userid='$uid' and status='Cart'");
 $fetc = mysqli_fetch_array($caricart);
 $orderidd = $fetc ? $fetc['orderid'] : 0;
@@ -104,25 +105,25 @@ if (isset($_POST['update'])) {
                     <?php
                     if (!isset($_SESSION['log'])) {
                         echo '
-                    					<li><a href="registered.php"> Daftar</a></li>
-                    					<li><a href="login.php">Masuk</a></li>
-                    					';
+                                                            					<li><a href="registered.php"> Daftar</a></li>
+                                                            					<li><a href="login.php">Masuk</a></li>
+                                                            					';
                     } else {
                         if ($_SESSION['role'] == 'Member') {
                             echo '
-                    					<li style="color:white">Halo, ' .
+                                                            					<li style="color:white">Halo, ' .
                                 $_SESSION['name'] .
                                 '
-                    					<li><a href="logout.php">Keluar?</a></li>
-                    					';
+                                                            					<li><a href="logout.php">Keluar?</a></li>
+                                                            					';
                         } else {
                             echo '
-                    					<li style="color:white">Halo, ' .
+                                                            					<li style="color:white">Halo, ' .
                                 $_SESSION['name'] .
                                 '
-                    					<li><a href="admin">Admin Panel</a></li>
-                    					<li><a href="logout.php">Keluar?</a></li>
-                    					';
+                                                            					<li><a href="admin">Admin Panel</a></li>
+                                                            					<li><a href="logout.php">Keluar?</a></li>
+                                                            					';
                         }
                     }
                     ?>
@@ -265,7 +266,13 @@ if (isset($_POST['update'])) {
                                 </div>
                             </td>
                             <td class="invert"> <?php echo $b['berat_produk']; ?> kg </td>
-                            <td class="invert">Rp<?php echo number_format($b['hargaafter']); ?></td>
+                            <td class="invert">Rp<?php
+                            if ($role === 'Supplier') {
+                                echo number_format($b['hargaafter']);
+                            } else {
+                                echo number_format($b['hargabefore']);
+                            }
+                            ?></td>
                             <td class="invert">
                                 <div class="rem">
 
@@ -315,7 +322,7 @@ if (isset($_POST['update'])) {
 						$no=1;
 						$subtotal = 0;
 						while($b=mysqli_fetch_array($brg)){
-						$hrg = $b['hargaafter'];
+						$hrg = ($role === 'Supplier' ? $b['hargaafter'] : $b['hargabefore']) ;
 						$qtyy = $b['qty'];
 						$totalharga = $hrg * $qtyy;
 						$subtotal += $totalharga

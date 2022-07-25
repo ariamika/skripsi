@@ -14,11 +14,12 @@ if (isset($_POST['adduser'])) {
     $pass = password_hash($_POST['pass'], PASSWORD_DEFAULT);
     $provinsi = $_POST['provinsi'];
     $kota = $_POST['kota'];
+    $role = $_POST['role'] ? $_POST['role'] : 'Member';
 
     $tambahuser = mysqli_query(
         $conn,
-        "INSERT INTO LOGIN (namalengkap, email, password, notelp, alamat, provinsi, kota) 
-		VALUES('$nama','$email','$pass','$telp','$alamat',$provinsi,$kota)",
+        "INSERT INTO LOGIN (namalengkap, email, password, notelp, alamat, provinsi, kota, role) 
+		VALUES('$nama','$email','$pass','$telp','$alamat', $provinsi, $kota, '$role')",
     );
     if ($tambahuser) {
         echo " <div class='alert alert-success'>
@@ -250,6 +251,10 @@ if (isset($_POST['adduser'])) {
                     <input type="text" name="alamat" placeholder="Alamat Lengkap" required>
                     <h6>Informasi Login</h6>
 
+                    <select name="role" class="form-control" placeholder="Register as " style="margin: 1em 0;">
+                        <option value="Member" selected>Member</option>
+                        <option value="Supplier">Supplier</option>
+                    </select>
                     <input type="email" name="email" placeholder="Email" required="@">
                     <input type="password" name="pass" placeholder="Password" required>
                     <input type="submit" name="adduser" value="Daftar">

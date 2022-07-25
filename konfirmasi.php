@@ -1,4 +1,5 @@
 <?php
+define ('SITE_ROOT', realpath(dirname(__FILE__)));
 session_start();
 if (!isset($_SESSION['log'])) {
     header('location:login.php');
@@ -15,42 +16,33 @@ if (isset($_POST['confirm'])) {
     $fetch = mysqli_fetch_array($veriforderid);
     $liat = mysqli_num_rows($veriforderid);
 
-    if ($fetch > 0) {		
+    if ($fetch > 0) {
         $nama = $_POST['nama'];
         $metode = $_POST['metode'];
         $tanggal = $_POST['tanggal'];
-		$target_file = 'images/bukti_pembayaran/' . date('dmY') . '|'. basename($_FILES["bukti_pembayaran"]["name"]);
+        $target_file = 'images/bukti_pembayaran/' . date('dmY') . '-' . basename($_FILES['bukti_pembayaran']['name']);
 
-		if (move_uploaded_file($_FILES["bukti_pembayaran"]["tmp_name"], $target_file)) {
-			echo "The file ". htmlspecialchars( basename( $_FILES["bukti_pembayaran"]["name"])). " has been uploaded.";
-		} else {
-			echo "Sorry, there was an error uploading your file.";
-		}
+        if (move_uploaded_file($_FILES['bukti_pembayaran']['tmp_name'], $target_file)) {
+            echo 'The file ' . htmlspecialchars(basename($_FILES['bukti_pembayaran']['name'])) . ' has been uploaded.';
+            $kon = mysqli_query(
+                $conn,
+                "INSERT INTO konfirmasi (orderid, userid, payment, namarekening, tglbayar, bukti_pembayaran) VALUES ('$idorder','$userid','$metode','$nama','$tanggal','$target_file')",
+            );
+            if ($kon) {
+                $up = mysqli_query($conn, "update cart set status='Confirmed' where orderid='$idorder'");
 
-        $kon = mysqli_query(
-            $conn,
-            "insert into konfirmasi (orderid, userid, payment, namarekening, tglbayar, bukti_pembayaran) 
-		values('$idorder','$userid','$metode','$nama','$tanggal','$target_file')",
-        );
-        if ($kon) {
-            $up = mysqli_query($conn, "update cart set status='Confirmed' where orderid='$idorder'");
-
-            echo " <div class='alert alert-success'>
-			Terima kasih telah melakukan konfirmasi, team kami akan melakukan verifikasi.
-			Informasi selanjutnya akan dikirim via Email
-		  </div>
-		<meta http-equiv='refresh' content='7; url= index.php'/>  ";
+                echo " <div class='alert alert-success'>Terima kasih telah melakukan konfirmasi, team kami akan melakukan verifikasi.Informasi selanjutnya akan dikirim via Email</div>
+		        <meta http-equiv='refresh' content='7; url= index.php'/>";
+            } else {
+                echo "<div class='alert alert-warning'>Gagal Submit, silakan ulangi lagi.</div>
+		            <meta http-equiv='refresh' content='3; url= konfirmasi.php'/> ";
+            }
         } else {
-            echo "<div class='alert alert-warning'>
-			Gagal Submit, silakan ulangi lagi.
-		  </div>
-		 <meta http-equiv='refresh' content='3; url= konfirmasi.php'/> ";
+            echo "<div class='alert alert-danger'>Sorry, there was an error uploading your file.</div>";
         }
     } else {
-        echo "<div class='alert alert-danger'>
-			Kode Order tidak ditemukan, harap masukkan kembali dengan benar
-		  </div>
-		 <meta http-equiv='refresh' content='4; url= konfirmasi.php'/> ";
+        echo "<div class='alert alert-danger'>Kode Order tidak ditemukan, harap masukkan kembali dengan benar</div>
+		    <meta http-equiv='refresh' content='4; url= konfirmasi.php'/> ";
     }
 }
 
@@ -117,25 +109,25 @@ if (isset($_POST['confirm'])) {
                     <?php
                     if (!isset($_SESSION['log'])) {
                         echo '
-                                        					<li><a href="registered.php"> Daftar</a></li>
-                                        					<li><a href="login.php">Masuk</a></li>
-                                        					';
+                                                                                                                        					<li><a href="registered.php"> Daftar</a></li>
+                                                                                                                        					<li><a href="login.php">Masuk</a></li>
+                                                                                                                        					';
                     } else {
                         if ($_SESSION['role'] == 'Member') {
                             echo '
-                                        					<li style="color:white">Halo, ' .
+                                                                                                                        					<li style="color:white">Halo, ' .
                                 $_SESSION['name'] .
                                 '
-                                        					<li><a href="logout.php">Keluar?</a></li>
-                                        					';
+                                                                                                                        					<li><a href="logout.php">Keluar?</a></li>
+                                                                                                                        					';
                         } else {
                             echo '
-                                        					<li style="color:white">Halo, ' .
+                                                                                                                        					<li style="color:white">Halo, ' .
                                 $_SESSION['name'] .
                                 '
-                                        					<li><a href="admin">Admin Panel</a></li>
-                                        					<li><a href="logout.php">Keluar?</a></li>
-                                        					';
+                                                                                                                        					<li><a href="admin">Admin Panel</a></li>
+                                                                                                                        					<li><a href="logout.php">Keluar?</a></li>
+                                                                                                                        					';
                         }
                     }
                     ?>
