@@ -401,7 +401,7 @@ if (isset($_POST['checkout'])) {
         <hr>
         <br>
         <center>
-            <h2>Total harga yang tertera di atas sudah termasuk ongkos kirim sebesar Rp10.000</h2>
+            <h2>Total harga yang tertera di atas sudah termasuk ongkos kirim </h2>
             <h2>Bila telah melakukan pembayaran, harap konfirmasikan pembayaran Anda.</h2>
             <br>
 
