@@ -114,6 +114,7 @@ if(isset($_POST['selesai']))
                                     </span></a>
                                 <ul class="collapse">
                                     <li><a href="totalpenjualan.php" class="active">Total Penjualan</a></li>
+									<li><a href="pengiriman.php">Pengiriman</a></li>
                                 </ul>
                             </li>
 							<li>

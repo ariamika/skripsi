@@ -19,13 +19,18 @@ $province_id = $address->provinsi;
 $city_id = $address->kota;
 
 if (isset($_POST['checkout'])) {
-    $q3 = mysqli_query($conn, "update cart set status='Payment' where orderid='$orderidd'");
+    print_r($_POST);
+    $expedition = $_POST['ekspedisi'];
+    $expedition_packet = str_replace('Pilih Ekpedisi','',$_POST['ekspedisi_packet']);
+
+    $q3 = mysqli_query($conn, "update cart set status='Payment', expedition=UPPER('$expedition'), expeditionpacket='$expedition_packet' where orderid='$orderidd'");
+
     if ($q3) {
         echo "Berhasil Check Out
-		<meta http-equiv='refresh' content='1; url= index.php'/>";
+    	<meta http-equiv='refresh' content='1; url= index.php'/>";
     } else {
         echo "Gagal Check Out
-		<meta http-equiv='refresh' content='1; url= index.php'/>";
+    	<meta http-equiv='refresh' content='1; url= index.php'/>";
     }
 } else {
 }
@@ -91,25 +96,25 @@ if (isset($_POST['checkout'])) {
                     <?php
                     if (!isset($_SESSION['log'])) {
                         echo '
-                                                                                                                                                                                                                                                                                        					<li><a href="registered.php"> Daftar</a></li>
-                                                                                                                                                                                                                                                                                        					<li><a href="login.php">Masuk</a></li>
-                                                                                                                                                                                                                                                                                        					';
+                                                                                                                                                                                                                                                                                                            					<li><a href="registered.php"> Daftar</a></li>
+                                                                                                                                                                                                                                                                                                            					<li><a href="login.php">Masuk</a></li>
+                                                                                                                                                                                                                                                                                                            					';
                     } else {
                         if ($_SESSION['role'] == 'Member') {
                             echo '
-                                                                                                                                                                                                                                                                                        					<li style="color:white">Halo, ' .
+                                                                                                                                                                                                                                                                                                            					<li style="color:white">Halo, ' .
                                 $_SESSION['name'] .
                                 '
-                                                                                                                                                                                                                                                                                        					<li><a href="logout.php">Keluar?</a></li>
-                                                                                                                                                                                                                                                                                        					';
+                                                                                                                                                                                                                                                                                                            					<li><a href="logout.php">Keluar?</a></li>
+                                                                                                                                                                                                                                                                                                            					';
                         } else {
                             echo '
-                                                                                                                                                                                                                                                                                        					<li style="color:white">Halo, ' .
+                                                                                                                                                                                                                                                                                                            					<li style="color:white">Halo, ' .
                                 $_SESSION['name'] .
                                 '
-                                                                                                                                                                                                                                                                                        					<li><a href="admin">Admin Panel</a></li>
-                                                                                                                                                                                                                                                                                        					<li><a href="logout.php">Keluar?</a></li>
-                                                                                                                                                                                                                                                                                        					';
+                                                                                                                                                                                                                                                                                                            					<li><a href="admin">Admin Panel</a></li>
+                                                                                                                                                                                                                                                                                                            					<li><a href="logout.php">Keluar?</a></li>
+                                                                                                                                                                                                                                                                                                            					';
                         }
                     }
                     ?>
@@ -318,122 +323,124 @@ if (isset($_POST['checkout'])) {
             <!--quantity-->
             </table>
         </div>
-        <div class="checkout-left">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-md- text-center"
-                        style="padding: 0.5em;
+        <form method="post">
+            <div class="checkout-left">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md- text-center"
+                            style="padding: 0.5em;
 						background: #3399cc;
 						font-size: 1.1em;
 						color: #fff;
 						text-transform: uppercase;
 						margin: 0 0 1em;">
-                        <h4>Ongkir</h4>
-                    </div>
-                    <div class="col-md-12" style="margin-bottom: 10px">
-                        <div class="row">
-                            <div class="col-md-4">
-                                <div class="w-100"><b><small>Alamat Pengirim :</small></b></div>
-                                <div class="w-100">Jakarta Barat</div>
-                                <div class="w-100"><b><small>Alamat Tujuan :</small></b></div>
-                                <div class="w-100"><?php echo $address->alamat; ?></div>
-                                <div class="w-100"><b><small>Total Berat :</small></b></div>
-                                <div class="w-100"><?php echo $total_berat * 1000; ?> Gram</div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="w-100">
-                                    <b>Pilih Ekspedisi Pengiriman:</b>
+                            <h4>Ongkir</h4>
+                        </div>
+                        <div class="col-md-12" style="margin-bottom: 10px">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="w-100"><b><small>Alamat Pengirim :</small></b></div>
+                                    <div class="w-100">Jakarta Barat</div>
+                                    <div class="w-100"><b><small>Alamat Tujuan :</small></b></div>
+                                    <div class="w-100"><?php echo $address->alamat; ?></div>
+                                    <div class="w-100"><b><small>Total Berat :</small></b></div>
+                                    <div class="w-100"><?php echo $total_berat * 1000; ?> Gram</div>
                                 </div>
-                                <div class="w-100">
-                                    <select id="ekspedisi" class="form-control" onchange="getDetailExpedition()">
-                                        <option value="">Pilih Ekpedisi</option>
-                                        <option value="jne">JNE</option>
-                                        <option value="pos">POS</option>
-                                        <option value="tiki">TIKI</option>
-                                    </select>
+                                <div class="col-md-4">
+                                    <div class="w-100">
+                                        <b>Pilih Ekspedisi Pengiriman:</b>
+                                    </div>
+                                    <div class="w-100">
+                                        <select id="ekspedisi" name="ekspedisi" class="form-control"
+                                            onchange="getDetailExpedition()">
+                                            <option value="">Pilih Ekpedisi</option>
+                                            <option value="jne">JNE</option>
+                                            <option value="pos">POS</option>
+                                            <option value="tiki">TIKI</option>
+                                        </select>
+                                    </div>
+                                    <div id="section_detail_expedition" class="w-100"
+                                        style="display:none;margin-top:10px">
+                                        <select id="ekspedisi_detail" name="ekspedisi_detail" class="form-control"
+                                            onchange="geExpeditionCost()">
+                                            <option value="">Pilih Ekpedisi</option>
+                                        </select>
+                                    </div>
                                 </div>
-                                <div id="section_detail_expedition" class="w-100"
-                                    style="display:none;margin-top:10px">
-                                    <select id="ekspedisi_detail" class="form-control" onchange="geExpeditionCost()">
-                                        <option value="">Pilih Ekpedisi</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="w-100">
-                                    <b>Total Ongkir</b>
-                                </div>
-                                <div class="w-100">
-                                    <input id="total_ongkir" type="text" class="form-control" value="">
-                                </div>
-                                <div class="w-100" style="margin-top:10px">
-                                    <b>Total Bayar</b>
-                                </div>
-                                <div class="w-100">
-                                    <input id="total_bayar" type="text" class="form-control" value="">
+                                <div class="col-md-4">
+                                    <div class="w-100">
+                                        <b>Total Ongkir</b>
+                                    </div>
+                                    <div class="w-100">
+                                        <input id="total_ongkir" name="total_ongkir" type="text" class="form-control" value="">
+                                    </div>
+                                    <div class="w-100" style="margin-top:10px">
+                                        <b>Total Bayar</b>
+                                    </div>
+                                    <div class="w-100">
+                                        <input id="total_bayar" name="total_bayar" type="text" class="form-control" value="">
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
 
 
-                    <div class="col-md-12 text-center"
-                        style="padding: 0.5em;
+                        <div class="col-md-12 text-center"
+                            style="padding: 0.5em;
                         background: #3399cc;
                         font-size: 1.1em;
                         color: #fff;
                         text-transform: uppercase;
                         margin: 0 0 1em;">
-                        <h4>Kode Order Anda</h4>
-                    </div>
-                    <div class="col-md-12 text-center">
-                        <h1><input type="text" class="text-center" value="<?php echo $orderidd; ?>" disabled />
-                        </h1>
-                    </div>
+                            <h4>Kode Order Anda</h4>
+                        </div>
+                        <div class="col-md-12 text-center">
+                            <h1><input type="text" class="text-center" value="<?php echo $orderidd; ?>" disabled />
+                            </h1>
+                        </div>
 
+                    </div>
                 </div>
+                <div class="clearfix"> </div>
             </div>
-            <div class="clearfix"> </div>
-        </div>
 
-
-        <br>
-        <hr>
-        <br>
-        <center>
-            <h2>Total harga yang tertera di atas sudah termasuk ongkos kirim </h2>
-            <h2>Bila telah melakukan pembayaran, harap konfirmasikan pembayaran Anda.</h2>
             <br>
+            <hr>
+            <br>
+            <center>
+                <h2>Total harga yang tertera di atas sudah termasuk ongkos kirim </h2>
+                <h2>Bila telah melakukan pembayaran, harap konfirmasikan pembayaran Anda.</h2>
+                <br>
 
 
-            <?php 
+                <?php 
 			$metode = mysqli_query($conn,"select * from pembayaran");
 			
 			while($p=mysqli_fetch_array($metode)){
 				
 			?>
 
-            <img src="<?php echo $p['logo']; ?>" width="300px" height="200px"><br>
-            <h4><?php echo $p['metode']; ?> - <?php echo $p['norek']; ?><br>
-                a/n. <?php echo $p['an']; ?></h4><br>
-            <br>
-            <hr>
+                <img src="<?php echo $p['logo']; ?>" width="300px" height="200px"><br>
+                <h4><?php echo $p['metode']; ?> - <?php echo $p['norek']; ?><br>
+                    a/n. <?php echo $p['an']; ?></h4><br>
+                <br>
+                <hr>
 
-            <?php
+                <?php
 			}
 		?>
 
-            <br>
-            <br>
-            <p>Orderan anda Akan Segera kami proses 1x24 Jam Setelah Anda Melakukan Pembayaran ke ATM kami dan
-                menyertakan informasi pribadi yang melakukan pembayaran seperti Nama Pemilik Rekening / Sumber Dana,
-                Tanggal Pembayaran, Metode Pembayaran dan Jumlah Bayar.</p>
+                <br>
+                <br>
+                <p>Orderan anda Akan Segera kami proses 1x24 Jam Setelah Anda Melakukan Pembayaran ke ATM kami dan
+                    menyertakan informasi pribadi yang melakukan pembayaran seperti Nama Pemilik Rekening / Sumber Dana,
+                    Tanggal Pembayaran, Metode Pembayaran dan Jumlah Bayar.</p>
 
-            <br>
-            <form method="post">
+                <br>
+                <input type="hidden" id="ekspedisi_packet" name="ekspedisi_packet" value="">
                 <input type="submit" class="form-control btn btn-success" name="checkout"
                     value="I Agree and Check Out" \>
-            </form>
+        </form>
 
         </center>
     </div>
@@ -522,7 +529,7 @@ if (isset($_POST['checkout'])) {
     <link href="css/skdslider.css" rel="stylesheet">
     <script type="text/javascript">
         function getDetailExpedition() {
-            const province_id = <?php echo $province_id ? $province_id : 0 ; ?>;
+            const province_id = <?php echo $province_id ? $province_id : 0; ?>;
             const city_id = <?php echo $city_id ? $city_id : 0; ?>;
             const total_weight = <?php echo $total_berat * 1000; ?>;
             const expedition = $("#ekspedisi").val();
@@ -563,6 +570,7 @@ if (isset($_POST['checkout'])) {
 
         function geExpeditionCost() {
             let total_cost = <?php echo $subtotal_harga; ?>;
+            $("#ekspedisi_packet").val($("#ekspedisi_detail option:selected").html());
             const expedition_cost = parseInt($("#ekspedisi_detail").val());
             total_cost += expedition_cost;
             console.log(total_cost)

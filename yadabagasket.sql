@@ -12,7 +12,7 @@ MySQL - 10.4.24-MariaDB : Database - yadabagasket
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
-CREATE DATABASE /*!32312 IF NOT EXISTS*/`yadabagasket` /*!40100 DEFAULT CHARACTER SET utf8mb4 */;
+CREATE DATABASE /*!32312 IF NOT EXISTS*/`yadabagasket` /*!40100 DEFAULT CHARACTER SET latin1 */;
 
 USE `yadabagasket`;
 
@@ -26,21 +26,25 @@ CREATE TABLE `cart` (
   `userid` int(11) NOT NULL,
   `tglorder` timestamp NOT NULL DEFAULT current_timestamp(),
   `resinumber` varchar(250) DEFAULT NULL,
+  `expedition` varchar(250) DEFAULT NULL,
+  `expeditionpacket` varchar(250) DEFAULT NULL,
   `status` varchar(10) NOT NULL DEFAULT 'Cart',
   PRIMARY KEY (`idcart`),
   UNIQUE KEY `orderid` (`orderid`),
   KEY `orderid_2` (`orderid`)
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4;
 
 /*Data for the table `cart` */
 
-insert  into `cart`(`idcart`,`orderid`,`userid`,`tglorder`,`resinumber`,`status`) values 
-(10,'15wKVT0nej25Y',2,'2020-03-16 19:10:42',NULL,'Selesai'),
-(12,'15PzF03ejd8W2',1,'2020-05-13 09:40:48',NULL,'Confirmed'),
-(13,'16bK7earFw94Y',3,'2022-06-28 17:00:18',NULL,'Cart'),
-(14,'16CKJkZ2nMNMQ',1,'2022-07-07 20:22:06',NULL,'Cart'),
-(15,'16iyTFP6p8qjA',6,'2022-07-10 15:57:05',NULL,'Cart'),
-(18,'16S9NcPNn7n7E',7,'2022-07-23 00:08:35','RESI-JOY-001','Selesai');
+insert  into `cart`(`idcart`,`orderid`,`userid`,`tglorder`,`resinumber`,`expedition`,`expeditionpacket`,`status`) values 
+(10,'15wKVT0nej25Y',2,'2020-03-16 19:10:42',NULL,NULL,NULL,'Selesai'),
+(12,'15PzF03ejd8W2',1,'2020-05-13 09:40:48',NULL,NULL,NULL,'Confirmed'),
+(13,'16bK7earFw94Y',3,'2022-06-28 17:00:18',NULL,NULL,NULL,'Cart'),
+(14,'16CKJkZ2nMNMQ',1,'2022-07-07 20:22:06',NULL,NULL,NULL,'Cart'),
+(15,'16iyTFP6p8qjA',6,'2022-07-10 15:57:05',NULL,NULL,NULL,'Cart'),
+(18,'16S9NcPNn7n7E',7,'2022-07-23 00:08:35','RESI-JOY-001',NULL,NULL,'Selesai'),
+(19,'16JHnSkVbf/6.',7,'2022-07-25 21:07:42','TEST RESI ARYA 001',NULL,NULL,'Selesai'),
+(20,'16ee8TclRE3u2',7,'2022-07-28 21:04:07',NULL,'TIKI','REG - Regular Service (3-4 Days)','Payment');
 
 /*Table structure for table `detailorder` */
 
@@ -56,18 +60,14 @@ CREATE TABLE `detailorder` (
   KEY `idproduk` (`idproduk`),
   CONSTRAINT `idproduk` FOREIGN KEY (`idproduk`) REFERENCES `produk` (`idproduk`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `orderid` FOREIGN KEY (`orderid`) REFERENCES `cart` (`orderid`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=36 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=utf8mb4;
 
 /*Data for the table `detailorder` */
 
 insert  into `detailorder`(`detailid`,`orderid`,`idproduk`,`qty`) values 
-(13,'15wKVT0nej25Y',1,100),
-(14,'15PzF03ejd8W2',2,1),
-(24,'16iyTFP6p8qjA',1,2),
-(25,'16CKJkZ2nMNMQ',3,1),
-(26,'16bK7earFw94Y',2,2),
-(34,'16S9NcPNn7n7E',1,2),
-(35,'16S9NcPNn7n7E',3,2);
+(38,'16CKJkZ2nMNMQ',4,1),
+(39,'16ee8TclRE3u2',4,1),
+(40,'16ee8TclRE3u2',6,1);
 
 /*Table structure for table `kategori` */
 
@@ -78,14 +78,14 @@ CREATE TABLE `kategori` (
   `namakategori` varchar(20) NOT NULL,
   `tgldibuat` timestamp NOT NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`idkategori`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=44 DEFAULT CHARSET=utf8mb4;
 
 /*Data for the table `kategori` */
 
 insert  into `kategori`(`idkategori`,`namakategori`,`tgldibuat`) values 
-(1,'Bunga Tangkai','2019-12-20 14:28:34'),
-(2,'Bunga Papan','2019-12-20 14:34:17'),
-(3,'Bunga Hidup','2020-03-16 19:15:40');
+(1,'Klingrit Gabus Karet','2022-07-25 21:37:32'),
+(42,'Daihatsu Toyota','2022-07-28 14:15:25'),
+(43,'Mitsubishi','2022-07-28 14:15:30');
 
 /*Table structure for table `konfirmasi` */
 
@@ -103,7 +103,7 @@ CREATE TABLE `konfirmasi` (
   PRIMARY KEY (`idkonfirmasi`),
   KEY `userid` (`userid`),
   CONSTRAINT `userid` FOREIGN KEY (`userid`) REFERENCES `login` (`userid`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4;
 
 /*Data for the table `konfirmasi` */
 
@@ -736,9 +736,9 @@ CREATE TABLE `pembayaran` (
 /*Data for the table `pembayaran` */
 
 insert  into `pembayaran`(`no`,`metode`,`norek`,`logo`,`an`) values 
-(1,'Bank BCA','13131231231','images/bca.jpg','Arya B'),
-(2,'Bank Mandiri','943248844843','images/mandiri.jpg','Arya B'),
-(3,'DANA','0882313132123','images/dana.png','Arya B');
+(1,'Bank BCA','13131231231','images/bca.jpg','Asan'),
+(2,'Bank Mandiri','943248844843','images/mandiri.jpg','Asan'),
+(3,'DANA','0882313132123','images/dana.png','Asan');
 
 /*Table structure for table `produk` */
 
@@ -758,14 +758,17 @@ CREATE TABLE `produk` (
   PRIMARY KEY (`idproduk`),
   KEY `idkategori` (`idkategori`),
   CONSTRAINT `idkategori` FOREIGN KEY (`idkategori`) REFERENCES `kategori` (`idkategori`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4;
 
 /*Data for the table `produk` */
 
 insert  into `produk`(`idproduk`,`idkategori`,`namaproduk`,`gambar`,`deskripsi`,`rate`,`hargabefore`,`hargaafter`,`berat_produk`,`tgldibuat`) values 
-(1,1,'Mawar Merah','produk/7443a12318c5f4f29059d243fd14f447.png','Setangkai mawar merah',5,23000,19000,2,'2019-12-20 16:10:26'),
-(2,1,'Mawar Putih','produk/15kwuDMbYtraw.png','Setangkai mawar putih',4,24000,19500,1,'2019-12-20 16:24:13'),
-(3,3,'Bunga Hidup','produk/15Ak7lFMfvuJc.jpg','Bunga Hidup',5,25000,15000,1,'2020-03-16 19:16:53');
+(4,1,'1.0mm TBA FIREFLY KERTAS PACKI','produk/16xOnyTqcN6c6.jpg','Harga per 1 meter x 1 meter.  Pembelian lebih dari 1 meter, Mohon infokan bila ingin dipotong per meter.   Melayani eceran ataupun grosir. Sangat bisa untuk dijual kembali dengan harga yang lebih ting',5,85000,75000,1,'2022-07-28 14:16:32'),
+(5,1,'0.5mm TBA FIREFLY KERTAS PACKI','produk/16xOnyTqcN6c6.jpg','Harga per 1 meter x 1 meter.  Pembelian lebih dari 1 meter, Mohon infokan bila ingin dipotong per meter.   Melayani eceran ataupun grosir. Sangat bisa untuk dijual kembali dengan harga yang lebih ting',5,55000,45000,1,'2022-07-28 14:17:16'),
+(6,42,'17173-BZ020 GASKET PAKING MANI','produk/16KZeZ3tU66xU.jpg','Untuk Avanza Xenia Rush Terios Sirion. Cocok untuk Engine 3SZ-VE dan K3-VE.  Bahan Besi  Melayani eceran ataupun grosir.  Harga grosir minimum pembelian 2 Pcs. Barang dijamin berkualitas. Standard oem',5,65000,55000,1,'2022-07-28 14:18:20'),
+(7,42,'16341-35010 SEAL ORING THERMOS','produk/16ZcnR4O9npmM.jpg','Untuk Avanza Xenia Granmax Rush Terios. Cocok untuk Engine 3SZ-VE dan K3-VE.  Melayani eceran ataupun grosir.  Harga grosir minimum pembelian 5 Pcs. Barang dijamin berkualitas. Standard oem.  1 Kemasa',5,15000,10000,1,'2022-07-28 14:19:20'),
+(8,42,'17177-23020 GASKET PAKING MANI','produk/16HgBDxQdMuGo.jpg','Untuk Avanza Xenia 1300cc non vvti, ukuran lubang lebih kecil dari 1300VVTI dan 1500cc.  Melayani eceran ataupun grosir.  Harga grosir minimum pembelian 5 Pcs. Barang dijamin berkualitas. Standard oem',5,40000,30000,1,'2022-07-28 14:20:38'),
+(9,43,'MN149704 MN149705 TRITON GASKE','produk/16XO8HpsET1N6.jpg','Harga yg tercantum adalah harga per set, isi 4 pcs.  Kualitas standard original. Sudah banyak yg pakai.  Kemasan plastik polos.',5,85000,80000,1,'2022-07-28 14:21:22');
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

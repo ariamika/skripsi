@@ -82,8 +82,8 @@ $itungtrans3 = $itungtrans2['jumlahtrans'];
                                 <a href="javascript:void(0)" aria-expanded="true"><i class="ti-layout"></i><span>Laporan
                                     </span></a>
                                 <ul class="collapse">
-                                    <li class="active"><a href="totalpenjualan.php" class="active">Total Penjualan</a></li>
-                                    <li><a href="pengiriman.php" class="active">Pengiriman</a></li>
+                                    <li><a href="totalpenjualan.php" class="active">Total Penjualan</a></li>
+                                    <li class="active"><a href="pengiriman.php" class="active">Pengiriman</a></li>
                                 </ul>
                             </li>
                             <li>
@@ -158,10 +158,11 @@ $itungtrans3 = $itungtrans2['jumlahtrans'];
             <!-- header area end -->
             <?php
             /*
-                                                				$periksa_bahan=mysqli_query($conn,"select * from stock_brg where stock <10");
-                                                				while($p=mysqli_fetch_array($periksa_bahan)){	
-                                                					if($p['stock']>=1){	
-                                                						?>
+                                                            				$periksa_bahan=mysqli_query($conn,"select * from stock_brg where stock <10");
+                                                            				while($p=mysqli_fetch_array($periksa_bahan)){	
+                                                            					if($p['stock']>=1){	
+                                                            						?>
+            ?>
             ?>
             ?>
             ?>
@@ -189,31 +190,32 @@ $itungtrans3 = $itungtrans2['jumlahtrans'];
                         <div class="card">
                             <div class="card-body">
                                 <div class="d-sm-flex justify-content-between align-items-center">
-                                    <h2>Laporan Total Penjualan <?php echo date('F Y'); ?></h2>
+                                    <h2>Laporan Pengiriman</h2>
                                 </div>
                                 <div class="data-tables datatable-dark">
                                     <table class="datatables" style="width:100%">
                                         <thead class="thead-dark">
                                             <tr>
-                                                <th>No</th>
-                                                <th>Nama Barang</th>
-                                                <th>Total Penjualam</th>
+                                                <th>Order ID</th>
+                                                <th>Nama Pembeli</th>
+                                                <th>Alamat Tujuan</th>
+                                                <th>No Resi</th>
+                                                <th>Ekspedisi</th>
+                                                <th>Status</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <?php 
-											$result=mysqli_query($conn,"SELECT DORD.idproduk, P.namaproduk, SUM(DORD.qty) total 
-                                            FROM detailorder DORD INNER JOIN produk P ON DORD.idproduk = P.idproduk
-                                            INNER JOIN cart C ON c.orderid = DORD.orderid
-                                            WHERE C.status = 'Selesai' AND MONTH(tglorder) = MONTH(NOW()) AND  YEAR(tglorder) = YEAR(NOW())
-                                            GROUP BY DORD.idproduk");
-											$no=1;
+											$result=mysqli_query($conn,"SELECT C.orderid, L.namalengkap, L.alamat, MK.city_name, MK.province, C.resinumber, C.expedition, C.expeditionpacket, C.status FROM `cart` C INNER JOIN login L ON C.`userid` = L.userid INNER JOIN master_kota MK ON MK.city_id = L.kota WHERE C.`status` IN ('Payment', 'Pengiriman')");
 											while($res = mysqli_fetch_array($result)){
                                             ?>
                                             <tr>
-                                                <td><?php echo $no++; ?></td>
-                                                <td><strong><?php echo $res['namaproduk']; ?></strong></td>
-                                                <td><?php echo $res['total']; ?> Pcs</td>
+                                                <td><strong><?php echo $res['orderid']; ?></strong></td>
+                                                <td><?php echo $res['namalengkap']; ?></td>
+                                                <td><?php echo $res['alamat'] . ', ' . $res['city_name'] . ', ' . $res['province']; ?></td>
+                                                <td><?php echo ($res['resinumber'] ? $res['resinumber'] : '-'); ?></td>
+                                                <td><?php echo $res['expedition'] . '(' . $res['expeditionpacket'] . ')'; ?></td>
+                                                <td><?php echo $res['status']; ?></td>
                                             </tr>
                                             <?php 
 											}
@@ -221,46 +223,8 @@ $itungtrans3 = $itungtrans2['jumlahtrans'];
                                         </tbody>
                                     </table>
                                 </div>
-                                <br/>
-                                <h6>Penjualan Berdasarkan Wilayah</h6>
-                                <div class="data-tables datatable-dark">
-                                    <table class="datatables" style="width:100%">
-                                        <thead class="thead-dark">
-                                            <tr>
-                                                <th>No</th>
-                                                <th>Provinsi</th>
-                                                <th>Kota</th>
-                                                <th>Nama Barang</th>
-                                                <th>Total Penjualam</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <?php 
-											$result=mysqli_query($conn,"SELECT DORD.idproduk, P.namaproduk, MK.city_name, MP.province_name, SUM(DORD.qty) total 
-                                                                        FROM detailorder DORD INNER JOIN produk P ON DORD.idproduk = P.idproduk
-                                                                        INNER JOIN cart C ON c.orderid = DORD.orderid
-                                                                        INNER JOIN login L ON C.userid = L.userid
-                                                                        LEFT JOIN master_kota MK ON L.kota = MK.city_id
-                                                                        LEFT JOIN master_provinsi MP ON MK.province_id = MP.province_id
-                                                                        WHERE C.status = 'Selesai' AND MONTH(C.tglorder) = MONTH(NOW()) AND YEAR(C.tglorder) = YEAR(NOW())
-                                                                        GROUP BY DORD.idproduk, MK.city_name, MP.province_name");
-											$no=1;
-											while($res = mysqli_fetch_array($result)){
-                                            ?>
-                                            <tr>
-                                                <td><?php echo $no++; ?></td>
-                                                <td><strong><?php echo $res['province_name']; ?></strong></td>
-                                                <td><strong><?php echo $res['city_name']; ?></strong></td>
-                                                <td><strong><?php echo $res['namaproduk']; ?></strong></td>
-                                                <td><?php echo $res['total']; ?> Pcs</td>
-                                            </tr>
-                                            <?php 
-											}
-											?>
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <a href="datapesanan.php" target="_blank" class="btn btn-info">Export Data</a>
+                                <br />
+                                <a href="pengiriman.php" target="_blank" class="btn btn-info">Export Data</a>
                             </div>
                         </div>
                     </div>
